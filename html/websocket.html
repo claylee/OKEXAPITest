@@ -25,11 +25,11 @@
 		this.secretKey = secretKey;
 		this.lastHeartBeat = new Date().getTime();
 		this.overtime = 8000;
-        
+
         okCoinWebSocket.websocket = new WebSocket(okCoinWebSocket.wsUri);
-		
+
         //print(ShowObjects(okCoinWebSocket.websocket));
-        
+
 		okCoinWebSocket.websocket.onopen = function(evt) {
 			onOpen(evt)
 		};
@@ -42,12 +42,12 @@
 		okCoinWebSocket.websocket.onerror = function(evt) {
 			onError(evt)
 		};
-		
+
         alert(okCoinWebSocket.wsUri);
         console.log(this);
 		//setInterval(checkConnect,5000);
 	}
-    
+
     function ShowObjects(obj)
     {
         var s;
@@ -74,22 +74,22 @@
 		doSend("{'event':'addChannel','channel':'ok_sub_spotcny_btc_kline_1min'}");
 		//现货交易、合约交易测试
 		//tradeTest();
-		
+
 		//********                            测试数据                                                                 *******/
 		//////////////////现货行情//////////////////////////////////////////////////
 		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_ticker'}");
 		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_ticker'}");
-		
+
 		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_20'}");
 		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_60'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_depth_20'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_depth_60'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_trades'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_trades'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_btcusd_kline_3min'}");
-		
+
 		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_3min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_5min'}");
@@ -103,7 +103,7 @@
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_day'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_3day'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_week'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_kline_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_kline_3min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_kline_5min'}");
@@ -118,7 +118,7 @@
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_kline_3day'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_kline_week'}");
 		//////////////////现货行情//////////////////////////////////////////////////
-		
+
 		//////////////合约行情//////////////////////////////////////////////////////
 		doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_ticker_this_week'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_ticker_next_week'}");
@@ -126,7 +126,7 @@
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_ticker_this_week'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_ticker_next_week'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_ticker_quarter'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_3min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_5min'}");
@@ -140,10 +140,10 @@
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_day'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_3day'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_week'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_next_week_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_quarter_1min'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_kline_this_week_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_kline_next_week_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_kline_quarter_1min'}");
@@ -168,12 +168,12 @@
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_trade_this_week'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_trade_next_week'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_trade_quarter'}");
-		
+
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_index'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_futureusd_ltc_index'}");
 		//////////////合约行情//////////////////////////////////////////////////////
 	}
-	
+
 	function tradeTest(){
 		//现货交易
 		//spotTrade();
@@ -182,7 +182,7 @@
 		//spotOrderInfo();
 		//spotTrades();
 		//spotUserinfos();
-		
+
 		//合约交易
 		//futureTrade();
 		//futureCancelOrder(100);
@@ -205,14 +205,14 @@
 			for (var j = 0;j < array[i].length; j++) {
 				var isTrade = false;
 				var isCancelOrder = false;
-				
+
 				if (array[i][j] == 'ok_spotusd_trade' || array[i][j] == 'ok_spotcny_trade') {
 					isTrade = true;
 				} else if (array[i][j] == 'ok_spotusd_cancel_order'
 						|| array[i][j] == 'ok_spotcny_cancel_order') {
 					isCancelOrder = true;
 				}
-				
+
 				var order_id = array[i][j].order_id;
 				if (typeof (order_id) != 'undefined') {
 					if (isTrade) {
@@ -232,10 +232,28 @@
 			createTable(array);
 		}
 	}
-    
+
     function RefreshBtcKLine(klineData)
     {
-        
+  		var str = '<table id="tdata" border="1">\r\n<tr id="tr0">\r\n';
+  		for ( var index in array[0]) {
+  			str += '<th>' + index + '</th>\r\n';
+  		}
+  		str += '</tr>\r\n';
+
+  		for ( var i = 0; i < array.length; i++) {
+  			str += '<tr id="tr' + (i+1) + '">\r\n';
+  			for ( var j in array[i]) {
+  				str += '<td>' + JSON.stringify(array[i][j]) + '</td>\r\n';
+  				//if(typeof array[i][j] == 'string' && array[i][j].indexOf("ok_") >= 0) {
+  					//console.log(array[i][j]);
+  				//}
+  			}
+  			str += '</tr>\r\n';
+  		}
+
+  		str += '</table>\r\n';
+  		document.getElementById("output").innerHTML += str;
     }
 
 	function onError(evt) {
@@ -254,7 +272,7 @@
 		status.style.wordWrap = "break-word";
 		status.innerHTML += message + "<br/>";
 	}
-	
+
 	function createTable(array) {
 		var str = '<table id="tdata" border="1">\r\n<tr id="tr0">\r\n';
 		for ( var index in array[0]) {
@@ -272,7 +290,7 @@
 			}
 			str += '</tr>\r\n';
 		}
-		
+
 		str += '</table>\r\n';
 		document.getElementById("output").innerHTML += str;
 	}
@@ -299,7 +317,7 @@
 		doSend("{'event':'addChannel','channel':'ok_spotusd_userinfo','parameters' :{'api_key':'"
 				+ okCoinWebSocket.api_key + "','sign':'" + sign + "'}}");
 	}
-	
+
 	//查询订单信息
 	function spotOrderInfo(){
 		var sign = MD5("api_key=" + okCoinWebSocket.api_key + "&order_id=20914907&secret_key=" + okCoinWebSocket.secret_key + "&symbol=ltc_usd");
@@ -321,7 +339,7 @@
 
 	//合约下单
 	function futureTrade() {
-		var sign = MD5("amount=1&api_key=" + okCoinWebSocket.api_key + 
+		var sign = MD5("amount=1&api_key=" + okCoinWebSocket.api_key +
 				"&contract_type=this_week&lever_rate=20&match_price=1&price=1.5&symbol=ltc_usd&type=0&secret_key=" + okCoinWebSocket.secret_key);
 		doSend("{'event': 'addChannel','channel':'ok_futureusd_trade','parameters': {'api_key': '"
 				+ okCoinWebSocket.api_key + "','sign': '" + sign + "','symbol': 'ltc_usd','contract_type': 'this_week','amount': '1','price': '1.5','type': '0','match_price': '1','lever_rate': '20'}}");
@@ -351,21 +369,21 @@
 				+ okCoinWebSocket.api_key + "','sign': '" + sign + "','symbol': 'ltc_usd','order_id': '" + orderId
 				+ "','contract_type': 'this_week','status':'1','current_page':'1','page_length':'1'}}");
 	}
-	
+
 	//订阅合约交易数据
 	function futureTrades() {
 		var sign = MD5("api_key=" + okCoinWebSocket.api_key + "&secret_key=" + okCoinWebSocket.secret_key);
 		doSend("{'event':'addChannel','channel':'ok_sub_futureusd_trades','parameters' :{'api_key':'"
 				+ okCoinWebSocket.api_key + "','sign':'" + sign + "'}}");
 	}
-	
+
 	//订阅合约账户信息
 	function futureUserinfos() {
 		var sign = MD5("api_key=" + okCoinWebSocket.api_key + "&secret_key=" + okCoinWebSocket.secret_key);
 		doSend("{'event':'addChannel','channel':'ok_sub_futureusd_userinfo','parameters' :{'api_key':'"
 				+ okCoinWebSocket.api_key + "','sign':'" + sign + "'}}");
 	}
-	
+
 	//订阅合约持仓信息
 	function futurePositions() {
 		var sign = MD5("api_key=" + okCoinWebSocket.api_key + "&secret_key=" + okCoinWebSocket.secret_key);
