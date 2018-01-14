@@ -104,7 +104,7 @@ function RefreshChartOpt()
   data0 = splitData(rawData.map(function (item) {
     return [+item[1], +item[2], +item[5], +item[6]];
   }));
-  console.log(data0.values);
+  console.log(data0.values[1]);
   option = {
     title: {
         text: '上证指数',
