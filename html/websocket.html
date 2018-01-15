@@ -21,7 +21,7 @@
     </table>
 </div>
 <div id="output"></div>
-<div id="main" style="width: 600px;height:400px;"></div>
+<div id="main" style="width:800px;height:400px;"></div>
 
 <script type="text/javascript">
 	var okCoinWebSocket = {};
@@ -65,8 +65,10 @@
               }
               var sum = 0;
               for (var j = 0; j < dayCount; j++) {
-                  sum += data0.values[i - j][1];
+                  sum += parseFloat(data0.values[i - j][1]);
               }
+              console.log('sum:'+sum);
+              console.log(sum / dayCount);
               result.push(sum / dayCount);
           }
           return result;
@@ -77,22 +79,27 @@
           return item[0];
       });
 
-      var data0 = rawData.map(function (item) {
-          return [+item[1], +item[2], +item[5], +item[6]];
-      });
+      var data0 = rawData;
       var option = {
       };
       var upColor = '#ec0000';
       var upBorderColor = '#8A0000';
       var downColor = '#00da3c';
       var downBorderColor = '#008F28';
+
   function splitData(rawData) {
+    console.log("-----------------------");
+    //console.log(rawData);
       var categoryData = [];
       var values = []
       for (var i = 0; i < rawData.length; i++) {
-          categoryData.push(rawData[i].splice(0, 1)[0]);
-          values.push(rawData[i])
+          //console.log(i);
+          //console.log(rawData[i]);
+          //console.log(rawData[i].splice(0, 1)[0]);
+          categoryData.push(rawData[i][0]);
+          values.push([rawData[i][1],rawData[i][2],rawData[i][5],rawData[i][6]]);
       }
+      //console.log(values);
       return {
           categoryData: categoryData,
           values: values
@@ -101,13 +108,15 @@
 
 function RefreshChartOpt()
 {
-  data0 = splitData(rawData.map(function (item) {
-    return [+item[1], +item[2], +item[5], +item[6]];
-  }));
-  console.log(data0.values[1]);
+  //rawData.map(function (item) {
+  //  return [+item[1], +item[2], +item[5], +item[6]];
+  //})
+  //console.log(rawData);
+  data0 = splitData(rawData);
+  //console.log(data0.values[1]);
   option = {
     title: {
-        text: '上证指数',
+        text: 'OKEX SPOT _KLine 3min',
         left: 0
     },
     tooltip: {
@@ -341,25 +350,26 @@ myChart.setOption(option);
 		print("CONNECTED");
 
 		doSend("{'event':'addChannel','channel':'ok_sub_spotcny_btc_kline_1min'}");
+    doSend("{'event':'addChannel','channel':'ok_sub_spot_ltc_btc_kline_1min'}");
 		//现货交易、合约交易测试
 		//tradeTest();
 
 		//********                            测试数据                                                                 *******/
 		//////////////////现货行情//////////////////////////////////////////////////
-		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_ticker'}");
-		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_ticker'}");
+		//doSend("{'event':'addChannel','channel':'ok_sub_spot_bch_btc_ticker'}");
+		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_ticker'}");
 
-		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_20'}");
-		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_60'}");
+		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_20'}");
+		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_depth_60'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_depth_20'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_depth_60'}");
 
-		doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_trades'}");
+		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_trades'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_ltc_trades'}");
 
-		doSend("{'event':'addChannel','channel':'ok_btcusd_kline_3min'}");
+		//doSend("{'event':'addChannel','channel':'ok_btcusd_kline_3min'}");
 
-    doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_3min'}");
+    //doSend("{'event':'addChannel','channel':'ok_sub_futureusd_btc_kline_this_week_3min'}");
 
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_1min'}");
 		//doSend("{'event':'addChannel','channel':'ok_sub_spotusd_btc_kline_3min'}");
@@ -472,8 +482,9 @@ myChart.setOption(option);
       var str,colorhead,colorfoot;
 
       str =dateObj.getUTCFullYear() + '/' + (dateObj.getUTCMonth() +1 )
-      + '/' + dateObj.getUTCDate() + " " ;//
-      str = dateObj.toString();//
+      + '/' + dateObj.getUTCDate() + " " +dateObj.getUTCHours()
+      +":"+dateObj.getUTCMinutes() + ":" + dateObj.getUTCSeconds();//
+      //str = dateObj.toLocaleString();//
       // + " " + hh + ":" + mm + ":" + ss;
       return(str);
   }
@@ -484,19 +495,52 @@ myChart.setOption(option);
     var timestamp = item[0];
     var date = new Date(timestamp*1);
     console.log(timestamp);
-    console.log(date);
     //kdata[0][0] = formatDate(date);
     kItem.push(formatDate(date));
     kItem.push(item[1]);
     kItem.push(item[4]);
-    kItem.push("");
-    kItem.push("");
+    kItem.push("-=");
+    kItem.push("-+");
     kItem.push(item[3]);
     kItem.push(item[2]);
     kItem.push(item[5]);
     kItem.push(item[6]);
     kItem.push("-");
-      rawData.push(kItem);
+    console.log("===============");
+    //console.log(kItem);
+    //console.log(kItem.length + ":" + kItem[0]);
+    rawData.push(kItem);
+    //console.log(kItem.length);
+    //console.log(rawData.length);
+    //console.log(rawData);
+      RefreshChartOpt();
+      myChart.setOption(option);
+  }
+
+  function AddTickerItem(item)
+  {
+    var kItem = new Array();
+    var timestamp = item['timestamp'];
+    var date = new Date(timestamp*1);
+    console.log(timestamp);
+    //kdata[0][0] = formatDate(date);
+    kItem.push(formatDate(date));
+    kItem.push(item['open']);
+    kItem.push(item['close']);
+    kItem.push("-=");
+    kItem.push("-+");
+    kItem.push(item['buy']);
+    kItem.push(item['sell']);
+    kItem.push(item['high']);
+    kItem.push(item['low']);
+    kItem.push("-");
+    console.log("===============");
+    //console.log(kItem);
+    //console.log(kItem.length + ":" + kItem[0]);
+    rawData.push(kItem);
+    //console.log(kItem.length);
+    //console.log(rawData.length);
+    //console.log(rawData);
       RefreshChartOpt();
       myChart.setOption(option);
   }
@@ -530,18 +574,25 @@ myChart.setOption(option);
 			}
 		}
 
+    console.log(array[0].channel);
 		if (array.event == 'pong') {
 			okCoinWebSocket.lastHeartBeat = new Date().getTime();
 		} else {
 			//createTable(array);
       console.log(array[0].channel);
-      if(array[0].channel == "ok_sub_futureusd_btc_kline_this_week_3min")
+      if(array[0].channel == "ok_sub_futureusd_btc_kline_this_week_3min" ||
+          array[0].channel == "ok_sub_spot_ltc_btc_kline_1min")
       {
         var kdata = array[0].data;
         AddKandleItem(kdata[0]);
-        console.log(rawData);
-        console.log(array);
         console.log(kdata);
+      }
+      else if(array[0].channel == "ok_sub_spot_bch_btc_ticker")
+      {
+          var kdata = array[0].data;
+            console.log(kdata);
+          AddTickerItem(kdata);
+          console.log(kdata);
       }
 		}
 	}
