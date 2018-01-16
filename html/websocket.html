@@ -8,7 +8,8 @@
   	作者：OKCoin<br/>
   -->
   <script type="text/javascript" src="MD5.js"></script>
-      <script src="echarts.min.js"></script>
+  <script src="echarts.min.js"></script>
+  <script src="klinechart.js"></script>
 </head>
 <body>
 <h2 id="th2">WebSocket Test</h2>
@@ -107,7 +108,7 @@
 		print("CONNECTED");
 
 		doSend("{'event':'addChannel','channel':'ok_sub_spotcny_btc_kline_1min'}");
-    doSend("{'event':'addChannel','channel':'ok_sub_spot_ltc_btc_kline_1min'}");
+    doSend("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_kline_1min'}");
 		//现货交易、合约交易测试
 		//tradeTest();
 
@@ -298,7 +299,7 @@
     //console.log(kItem.length);
     //console.log(rawData.length);
     //console.log(rawData);
-      RefreshChartOpt();
+    RefreshChartOpt();
   }
 
 	function onMessage(e) {
@@ -337,10 +338,11 @@
 			//createTable(array);
       console.log(array[0].channel);
       if(array[0].channel == "ok_sub_futureusd_btc_kline_this_week_3min" ||
-          array[0].channel == "ok_sub_spot_ltc_btc_kline_1min")
+          array[0].channel == "ok_sub_spot_ltc_btc_kline_1min" ||
+        array[0].channel == "ok_sub_spot_btc_usdt_kline_1min")
       {
         var kdata = array[0].data;
-        AddKandleItem(kdata[0]);
+        klinechart.AddKandleItem(kdata[0]);
         console.log(kdata);
       }
       else if(array[0].channel == "ok_sub_spot_bch_btc_ticker")

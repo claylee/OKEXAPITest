@@ -54,13 +54,96 @@ function splitData(rawData) {
 }
 
 
+  function AddKandleItem(item)
+  {
+    var kItem = new Array();
+    var timestamp = item[0];
+    var date = new Date(timestamp*1);
+    console.log(timestamp);
+    //kdata[0][0] = formatDate(date);
+    kItem.push(formatDate(date));
+    kItem.push(item[1]);
+    kItem.push(item[4]);
+    kItem.push("-=");
+    kItem.push("-+");
+    kItem.push(item[3]);
+    kItem.push(item[2]);
+    kItem.push(item[5]);
+    kItem.push(item[6]);
+    kItem.push("-");
+    console.log("===============");
+    //console.log(kItem);
+    //console.log(kItem.length + ":" + kItem[0]);
+    rawData.push(kItem);
+    //console.log(kItem.length);
+    //console.log(rawData.length);
+    //console.log(rawData);
+      RefreshChartOpt();
+      myChart.setOption(option);
+  }
 
-myChart.setOption(option);
+//myChart.setOption(option);
 
 var klinechart = {
     myChart:{},
     init: function(domchart){
       myChart = echarts.init(domchart);
+    },
+    AddKandleItem:function(item)
+    {
+      var kItem = new Array();
+      var timestamp = item[0];
+      var date = new Date(timestamp*1);
+      console.log("===============");
+      console.log(item);
+      console.log(timestamp);
+      //kdata[0][0] = formatDate(date);
+      kItem.push(formatDate(date));
+      kItem.push(item[1]);//open
+      kItem.push(item[4]);//close
+      kItem.push("-=");
+      kItem.push("-+");
+      kItem.push(item[3]);//lowest
+      kItem.push(item[2]);//high
+      kItem.push(item[5]);
+      //kItem.push(item[6]);
+      kItem.push("-");
+      console.log("===============");
+      //console.log(kItem);
+      //console.log(kItem.length + ":" + kItem[0]);
+      rawData.push(kItem);
+      //console.log(kItem.length);
+      //console.log(rawData.length);
+      //console.log(rawData);
+      //myChart.setOption(option);
+      this.refresh();
+    },
+    addItem1:function(item){
+        var kItem = new Array();
+        var timestamp = item['timestamp'];
+        var date = new Date(timestamp*1);
+        console.log("===============");
+        console.log(timestamp);
+        console.log(item);
+        //kdata[0][0] = formatDate(date);
+        kItem.push(formatDate(date));
+        kItem.push(item['open']);
+        kItem.push(item['close']);
+        kItem.push("-=");
+        kItem.push("-+");
+        kItem.push(item['buy']);
+        kItem.push(item['sell']);
+        kItem.push(item['high']);
+        kItem.push(item['low']);
+        kItem.push("-");
+        console.log("===============");
+        //console.log(kItem);
+        //console.log(kItem.length + ":" + kItem[0]);
+        rawData.push(kItem);
+        //console.log(kItem.length);
+        //console.log(rawData.length);
+        //console.log(rawData);
+        this.refresh();
     },
     refresh:function()
     {
