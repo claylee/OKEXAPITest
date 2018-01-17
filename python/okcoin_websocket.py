@@ -6,8 +6,11 @@ import hashlib
 import zlib
 import base64
 
+import serialData
+
 api_key=''
 secret_key = ""
+serialDataFile = None;
 #business
 def buildMySign(params,secretKey):
     sign = ''
@@ -92,8 +95,9 @@ def futureRealTrades(api_key,secretkey):
 
 def on_open(self):
     #subscribe okcoin.com spot ticker
-    self.send("{'event':'addChannel','channel':'ok_sub_spotusd_btc_ticker','binary':'true'}")
-
+    print 'now open'
+    #self.send("{'event':'addChannel','channel':'ok_sub_spotusd_btc_ticker','binary':'true'}")
+    self.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_kline_1min'}");
     #subscribe okcoin.com future this_week ticker
     #self.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_ticker_this_week','binary':'true'}")
 
@@ -126,8 +130,14 @@ def on_open(self):
     #futureRealTradesMsg = futureRealTrades(api_key,secret_key)
     #self.send(futureRealTradesMsg)
 def on_message(self,evt):
-    data = inflate(evt) #data decompress
+    print 'recieve message:'
+    print (evt)
+    #data = inflate(evt) #data decompress
+    print("serialDataFile");
+    serialDataFile.append(evt);
+    print(serialDataFile);
     print (data)
+
 def inflate(data):
     decompress = zlib.decompressobj(
             -zlib.MAX_WBITS  # see above
@@ -137,6 +147,7 @@ def inflate(data):
     return inflated
 
 def on_error(self,evt):
+    print 'Error:'
     print (evt)
 
 def on_close(self,evt):
@@ -144,8 +155,10 @@ def on_close(self,evt):
 
 if __name__ == "__main__":
     url = "wss://real.okcoin.com:10440/websocket/okcoinapi"      #if okcoin.cn  change url wss://real.okcoin.cn:10440/websocket/okcoinapi
+    url = "wss://real.okex.com:10440/websocket/okexapi"
     api_key='your api_key which you apply'
     secret_key = "your secret_key which you apply"
+    serialDataFile = serialData.serialData("E:/Project_P/GitPy/OKEXAPITest/python/")
 
     websocket.enableTrace(False)
     if len(sys.argv) < 2:
@@ -157,4 +170,5 @@ if __name__ == "__main__":
                                 on_error = on_error,
                                 on_close = on_close)
     ws.on_open = on_open
+    print "ws is not starting"
     ws.run_forever()
