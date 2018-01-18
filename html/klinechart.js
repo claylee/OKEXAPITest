@@ -21,6 +21,16 @@ function calculateMA(dayCount) {
     return result;
 }
 
+function  formatDate(dateObj)   {
+    var str,colorhead,colorfoot;
+
+    str =dateObj.getUTCFullYear() + '/' + (dateObj.getUTCMonth() +1 )
+    + '/' + dateObj.getUTCDate() + " " +dateObj.getUTCHours()
+    +":"+dateObj.getUTCMinutes() + ":" + dateObj.getUTCSeconds();//
+    //str = dateObj.toLocaleString();//
+    // + " " + hh + ":" + mm + ":" + ss;
+    return(str);
+}
 
 var dates = rawData.map(function (item) {
     return item[0];
@@ -56,6 +66,7 @@ function splitData(rawData) {
 
   function AddKandleItem(item)
   {
+    console.log(item);
     var kItem = new Array();
     var timestamp = item[0];
     var date = new Date(timestamp*1);

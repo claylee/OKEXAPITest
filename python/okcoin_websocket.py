@@ -130,13 +130,14 @@ def on_open(self):
     #futureRealTradesMsg = futureRealTrades(api_key,secret_key)
     #self.send(futureRealTradesMsg)
 def on_message(self,evt):
-    print 'recieve message:'
-    print (evt)
-    #data = inflate(evt) #data decompress
-    print("serialDataFile");
-    serialDataFile.append(evt);
-    print(serialDataFile);
-    print (data)
+    try:
+        print 'recieve message:'
+        print (evt)
+        #data = inflate(evt) #data decompress
+        print("serialDataFile");
+        serialDataFile.SerialMessage(json.loads(evt)[0]);
+    except(Exception) as Argument:
+        print '!Error : On message :', Argument
 
 def inflate(data):
     decompress = zlib.decompressobj(

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>WebSocket Test</title>
+
+  <!--
+  	版本：1.0<br/>
+  	作者：OKCoin<br/>
+  -->
+  <script type="text/javascript" src="MD5.js"></script>
+  <script src="echarts.min.js"></script>
+  <script src="klinechart.js"></script>
+  <script src="jquery-2.1.1.js"></script>
+</head>
+<body>
+<h2 id="th2">WebSocket Test</h2>
+<div id="status"></div>
+<div id="kline">
+    <table>
+        <thead></thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div id="output"></div>
+<div id="main" style="width:800px;height:400px;"></div>
+
+<script src="jquery-2.1.1.js"></script>
+<script type="text/javascript">
+	var okCoinWebSocket = {};
+  var idx = 0;
+  var jsonData = [];
+  function addItem(){
+    console.log("===============================");
+    console.log(jsonData);
+    console.log(idx);
+    console.log(jsonData[idx]);
+    if(!jsonData[idx])
+      return;
+    klinechart.AddKandleItem(jsonData[idx]);
+    idx++;
+    console.log(idx);
+  }
+
+  setInterval("addItem()",1000);
+
+  $(function(){
+    klinechart.init(document.getElementById('main'));
+    $.getJSON("data_ok_sub_spot_btc_usdt_kline_1min_20180118.json",function(data){
+      //alert(data['channel']);
+      jsonData = data["data"];
+      console.log(jsonData);
+      //setInterval("addItem()",1000);
+    });
+  });
+</script>
