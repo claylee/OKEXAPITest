@@ -159,7 +159,7 @@ if __name__ == "__main__":
     url = "wss://real.okex.com:10440/websocket/okexapi"
     api_key='your api_key which you apply'
     secret_key = "your secret_key which you apply"
-    serialDataFile = serialData.serialData("E:/Project_P/GitPy/OKEXAPITest/python/")
+    serialDataFile = serialData.serialData("E:/Project_P/GitPy/OKEXAPITest/html/")
 
     websocket.enableTrace(False)
     if len(sys.argv) < 2:

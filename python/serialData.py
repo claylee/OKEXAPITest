@@ -59,15 +59,11 @@ class serialData:
             if(self.channelDict.has_key(c)):
                 chlCtx = self.channelDict[c]
             else:
-                print "SerialMessage";
                 chlCtx = channelContext.channelContext(self.dataFilePath,message)
-                print "2SerialMessage";
-                chlCtx.load(c)
-                print "3SerialMessage";
                 self.channelDict[c] = chlCtx
+                chlCtx.load(c)
 
-            print "4SerialMessage";
-
+            print self.channelDict[c]
             chlCtx.addItem(message["data"]);
 
             self.flowCount += 1
