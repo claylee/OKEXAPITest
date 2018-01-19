@@ -31,26 +31,24 @@
   var idx = 0;
   var jsonData = [];
   function addItem(){
-    console.log("===============================");
-    console.log(jsonData);
-    console.log(idx);
-    console.log(jsonData[idx]);
-    if(!jsonData[idx])
-      return;
-    klinechart.AddKandleItem(jsonData[idx]);
-    idx++;
-    console.log(idx);
-  }
-
-  setInterval("addItem()",1000);
-
-  $(function(){
-    klinechart.init(document.getElementById('main'));
-    $.getJSON("data_ok_sub_spot_btc_usdt_kline_1min_20180118.json",function(data){
+    $.getJSON("data_ok_sub_spot_btc_usdt_kline_1min_20180119.json",function(data){
       //alert(data['channel']);
       jsonData = data["data"];
       console.log(jsonData);
       //setInterval("addItem()",1000);
+      klinechart.resetData(jsonData);
     });
+    if(!jsonData[idx])
+      return;
+    //klinechart.AddKandleItem(jsonData[idx]);
+    idx++;
+    console.log(idx);
+  }
+
+  setInterval("addItem()",5000);
+
+  $(function(){
+    klinechart.init(document.getElementById('main'));
+
   });
 </script>

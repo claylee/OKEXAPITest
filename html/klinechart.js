@@ -97,36 +97,53 @@ function splitData(rawData) {
 
 var klinechart = {
     myChart:{},
+        nameP:"papapa",
     init: function(domchart){
       myChart = echarts.init(domchart);
     },
+    ConvertItem:function(item){
+        var kItem = new Array();
+        var timestamp = item[0];
+        var date = new Date(timestamp*1);
+        console.log("===============");
+        console.log(item);
+        console.log(timestamp);
+        //kdata[0][0] = formatDate(date);
+        kItem.push(formatDate(date));
+        kItem.push(item[1]);//open
+        kItem.push(item[4]);//close
+        kItem.push("-=");
+        kItem.push("-+");
+        kItem.push(item[3]);//lowest
+        kItem.push(item[2]);//high
+        kItem.push(item[5]);
+        //kItem.push(item[6]);
+        kItem.push("-");
+        return kItem;
+    },
     AddKandleItem:function(item)
     {
-      var kItem = new Array();
-      var timestamp = item[0];
-      var date = new Date(timestamp*1);
-      console.log("===============");
-      console.log(item);
-      console.log(timestamp);
-      //kdata[0][0] = formatDate(date);
-      kItem.push(formatDate(date));
-      kItem.push(item[1]);//open
-      kItem.push(item[4]);//close
-      kItem.push("-=");
-      kItem.push("-+");
-      kItem.push(item[3]);//lowest
-      kItem.push(item[2]);//high
-      kItem.push(item[5]);
-      //kItem.push(item[6]);
-      kItem.push("-");
       console.log("===============");
       //console.log(kItem);
       //console.log(kItem.length + ":" + kItem[0]);
-      rawData.push(kItem);
-      //console.log(kItem.length);
-      //console.log(rawData.length);
-      //console.log(rawData);
-      //myChart.setOption(option);
+      rawData.push(ConvertItem(item));
+      this.refresh();
+    },
+    ExtendItem:function(itemList)
+    {
+      for(var i in itemList){
+        var item = itemList[i];
+        rawData.push(ConvertItem(item));
+      }
+      this.refresh();
+    },
+    resetData:function(itemList)
+    {
+      rawData = [];
+      for(var i in itemList){
+        var item = itemList[i];
+        rawData.push(this.ConvertItem(item));
+      }
       this.refresh();
     },
     addItem1:function(item){

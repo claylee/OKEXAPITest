@@ -1,10 +1,11 @@
+
+
 import sys
 import time
 import json
 import channelContext
 
-class serialData:
-
+class JsonlizeData:
     dataFilePath = ""
     dataFile = ""
     data = {"channel":"","data":[]}
@@ -54,7 +55,8 @@ class serialData:
 
     def SerialMessage(self,message):
         chlCtx = None
-        c = message["channel"]
+        print message
+        c = message["status"]
         try:
             if(self.channelDict.has_key(c)):
                 chlCtx = self.channelDict[c]
