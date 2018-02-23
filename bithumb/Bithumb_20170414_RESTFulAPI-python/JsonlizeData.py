@@ -55,8 +55,10 @@ class JsonlizeData:
 
     def SerialMessage(self,message):
         chlCtx = None
+        print("this is a test line")
         print message
         c = message["status"]
+        print(c)
         try:
             if(self.channelDict.has_key(c)):
                 chlCtx = self.channelDict[c]
@@ -67,6 +69,7 @@ class JsonlizeData:
 
             print self.channelDict[c]
             chlCtx.addItem(message["data"]);
+            print(chlCtx)
 
             self.flowCount += 1
             print " | ",self.flowCount,self.flowLevel

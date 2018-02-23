@@ -20,8 +20,10 @@ class channelContext:
     def load(self, channel):
         return self.loadData()
 
+
     def loadData(self):
-        with open(self.filename,'r') as jsonFile:
+        print("loading channel")
+        with open(self.filename,'a+') as jsonFile:
             try:
                 loaddata = json.load(jsonFile)
                 if(loaddata != None and loaddata.has_key("status")):
@@ -32,7 +34,9 @@ class channelContext:
                 print 'Json Load Error:',Argument
 
     def addItem(self,item):
-        self.jsonData["data"].extend(item)
+        print(item)
+        self.jsonData["data"].append(item)
+        print(self.jsonData["data"])
 
     def store(self):
         try:

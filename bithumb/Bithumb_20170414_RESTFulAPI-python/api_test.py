@@ -48,11 +48,11 @@ rgParams = {
 # /public/recent_ticker
 # /public/orderbook
 # /public/recent_transactions
-serialDataFile = JsonlizeData.JsonlizeData("E:/gitRepository/OKEXAPITest/html/bithumbData/")
+serialDataFile = JsonlizeData.JsonlizeData("E:/Project_P/GitPy/OKEXAPITest/html/Data/BITHUMB/")
 print("Bithumb Public API URI('/public/ticker') Request...");
 result = api.xcoinApiCall("/public/ticker", rgParams);
 
-for i in range(100):
+for i in range(5):
 	time.sleep(2)
 	result = api.xcoinApiCall("/public/ticker", rgParams);
 	print("- Status Code: " + result["status"]);
