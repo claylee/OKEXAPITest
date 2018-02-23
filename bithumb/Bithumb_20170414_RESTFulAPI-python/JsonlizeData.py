@@ -55,9 +55,9 @@ class JsonlizeData:
 
     def SerialMessage(self,message):
         chlCtx = None
-        print(message)
+        #print(message)
         c = message["status"]
-        print(c)
+        #print(c)
         try:
             if(c in self.channelDict):
                 chlCtx = self.channelDict[c]
@@ -66,7 +66,7 @@ class JsonlizeData:
                 self.channelDict[c] = chlCtx
                 chlCtx.load(c)
 
-            print(self.channelDict[c])
+            #print(self.channelDict[c])
             chlCtx.addItem(message["data"]);
 
             self.flowCount += 1
@@ -87,12 +87,12 @@ class JsonlizeData:
             CurrentChannel = self.data["channel"]
             print("Channel",CurrentChannel,DataItemChannel)
             if(DataItemChannel != CurrentChannel):
-                print('load item channel changed')
+                #print('load item channel changed')
                 self.store();
                 self.load(data)
 
             if(self.data == None or self.data["channel"] == ""):
-                print('load item')
+                ###print('load item')
                 self.load(data)
             print("!!!",self.data)
             try:
