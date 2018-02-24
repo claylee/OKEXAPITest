@@ -51,16 +51,19 @@ rgParams = {
 serialDataFile = JsonlizeData.JsonlizeData("E:/Project_P/GitPy/OKEXAPITest/html/Data/BITHUMB/")
 print("Bithumb Public API URI('/public/ticker') Request...");
 result = api.xcoinApiCall("/public/ticker", rgParams);
+print("- Status Code: " + result["status"]);
+print("- Opening Price: " + result["data"]["opening_price"]);
+print("- Closing Price: " + result["data"]["closing_price"]);
+print("- Sell Price: " + result["data"]["sell_price"]);
+print("- Buy Price: " + result["data"]["buy_price"]);
+print("");
 
-for i in range(5):
-	time.sleep(2)
+for i in range(999999):
+	time.sleep(1)
+	print(">>",i)
 	result = api.xcoinApiCall("/public/ticker", rgParams);
-	print("- Status Code: " + result["status"]);
-	print("- Opening Price: " + result["data"]["opening_price"]);
-	print("- Closing Price: " + result["data"]["closing_price"]);
-	print("- Sell Price: " + result["data"]["sell_price"]);
+	print("- Buy Price: " + result["data"]["date"]);
 	print("- Buy Price: " + result["data"]["buy_price"]);
-	print("");
 	serialDataFile.SerialMessage(result)
 
 #

@@ -24,19 +24,23 @@
 </div>
 <div id="output"></div>
 <div id="main" style="width:800px;height:400px;"></div>
+<div id="bithumb_main" style="width:800px;height:400px;"></div>
 
 <script src="jquery-2.1.1.js"></script>
 <script type="text/javascript">
 	var okCoinWebSocket = {};
   var idx = 0;
   var jsonData = [];
+  var klineOKCoin;
+  var klineBithumb;
+
   function addItem(){
     $.getJSON("data_ok_sub_spot_btc_usdt_kline_1min_20180119.json",function(data){
       //alert(data['channel']);
       jsonData = data["data"];
       console.log(jsonData);
       //setInterval("addItem()",1000);
-      klinechart.resetData(jsonData);
+      klineOKCoin.resetData(jsonData);
     });
     if(!jsonData[idx])
       return;
@@ -45,10 +49,30 @@
     console.log(idx);
   }
 
-  setInterval("addItem()",5000);
+  function addItemBitHumb(){
+    $.getJSON("data/BITHUMB/data_0000_20180224.json",function(data){
+      //alert(data['channel']);
+      jsonData = data["data"];
+      console.log(jsonData);
+      //setInterval("addItem()",1000);
+      klineBithumb.resetData(jsonData);
+    });
+    if(!jsonData[idx])
+      return;
+    //klinechart.AddKandleItem(jsonData[idx]);
+    idx++;
+    console.log(idx);
+  }
 
   $(function(){
-    klinechart.init(document.getElementById('main'));
+    klineOKCoin = klinechart.init(document.getElementById('main'));
+    klineBithumb = klinechart.init(document.getElementById('bithumb_main'));
+
+
+
+    //setInterval("addItem()",5000);
+    setInterval("addItemBitHumb()",5000);
+    //addItemBitHumb()
 
   });
 </script>

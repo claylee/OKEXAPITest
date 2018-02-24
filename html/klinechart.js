@@ -1,10 +1,8 @@
 
-var rawData = [
-        //['2015/12/31','3570.47','3539.18','-33.69','-0.94%','3538.35','3580.6','176963664','25403106','-']
-      ].reverse();
-
-function calculateMA(dayCount) {
+function calculateMA(data0, dayCount) {
     var result = [];
+    console.log("calculateMA");
+    console.log(data0);
     for (var i = 0, len = data0.values.length; i < len; i++) {
         if (i < dayCount) {
             result.push('-');
@@ -31,12 +29,12 @@ function  formatDate(dateObj)   {
     // + " " + hh + ":" + mm + ":" + ss;
     return(str);
 }
-
+/*
 var dates = rawData.map(function (item) {
     return item[0];
 });
-
-var data0 = rawData;
+*/
+var data0 = [];
 var option = {
 };
 var upColor = '#ec0000';
@@ -66,7 +64,6 @@ function splitData(rawData) {
 
   function AddKandleItem(item)
   {
-    console.log(item);
     var kItem = new Array();
     var timestamp = item[0];
     var date = new Date(timestamp*1);
@@ -96,12 +93,23 @@ function splitData(rawData) {
 //myChart.setOption(option);
 
 var klinechart = {
+   rawData : [
+        //['2015/12/31','3570.47','3539.18','-33.69','-0.94%','3538.35','3580.6','176963664','25403106','-']
+      ].reverse(),
     myChart:{},
         nameP:"papapa",
     init: function(domchart){
       myChart = echarts.init(domchart);
+      return this;
     },
     ConvertItem:function(item){
+      console.log(item instanceof Array);
+      console.log(item);
+      if(!(item instanceof Array))
+      {
+        console.log('item instanceof Array');
+        return this.ConvertItemBithumb(item);
+      }
         var kItem = new Array();
         var timestamp = item[0];
         var date = new Date(timestamp*1);
@@ -121,30 +129,51 @@ var klinechart = {
         kItem.push("-");
         return kItem;
     },
+    ConvertItemBithumb:function(item)
+    {
+      var kItem = new Array();
+      var timestamp = item["date"];
+      var date = new Date(timestamp*1);
+      console.log("=======ConvertItemBithumb========");
+      console.log(timestamp);
+      //kdata[0][0] = formatDate(date);
+      kItem.push(formatDate(date));
+      kItem.push(item["opening_price"]);//open
+      kItem.push(item["closing_price"]);//close
+      kItem.push("-=");
+      kItem.push("-+");
+      kItem.push(item["buy_price"]);//lowest
+      kItem.push(item["sell_price"]);//high
+      kItem.push(item["sell_price"]);//
+      //kItem.push(item[6]);
+      kItem.push("-");
+      return kItem;
+    },
     AddKandleItem:function(item)
     {
-      console.log("===============");
+      console.log("========AddKandleItem=======");
       //console.log(kItem);
       //console.log(kItem.length + ":" + kItem[0]);
-      rawData.push(ConvertItem(item));
+      this.rawData.push(ConvertItem(item));
       this.refresh();
     },
     ExtendItem:function(itemList)
     {
       for(var i in itemList){
         var item = itemList[i];
-        rawData.push(ConvertItem(item));
+        this.rawData.push(ConvertItem(item));
       }
       this.refresh();
     },
     resetData:function(itemList)
     {
-      rawData = [];
+      this.rawData = [];
       for(var i in itemList){
         var item = itemList[i];
-        rawData.push(this.ConvertItem(item));
+        this.rawData.push(this.ConvertItem(item));
       }
       this.refresh();
+        this.rawData.splice(0,this.rawData.length);;
     },
     addItem1:function(item){
         var kItem = new Array();
@@ -167,7 +196,7 @@ var klinechart = {
         console.log("===============");
         //console.log(kItem);
         //console.log(kItem.length + ":" + kItem[0]);
-        rawData.push(kItem);
+        this.rawData.push(kItem);
         //console.log(kItem.length);
         //console.log(rawData.length);
         //console.log(rawData);
@@ -179,7 +208,8 @@ var klinechart = {
       //  return [+item[1], +item[2], +item[5], +item[6]];
       //})
       //console.log(rawData);
-      data0 = splitData(rawData);
+      console.log('rowdata:');
+      var data0 = splitData(this.rawData);
       //console.log(data0.values[1]);
       option = {
         title: {
@@ -325,7 +355,7 @@ var klinechart = {
             {
                 name: 'MA5',
                 type: 'line',
-                data: calculateMA(5),
+                data: calculateMA(splitData(this.rawData),5),
                 smooth: true,
                 lineStyle: {
                     normal: {opacity: 0.5}
@@ -334,7 +364,7 @@ var klinechart = {
             {
                 name: 'MA10',
                 type: 'line',
-                data: calculateMA(10),
+                data: calculateMA(splitData(this.rawData),10),
                 smooth: true,
                 lineStyle: {
                     normal: {opacity: 0.5}
@@ -343,7 +373,7 @@ var klinechart = {
             {
                 name: 'MA20',
                 type: 'line',
-                data: calculateMA(20),
+                data: calculateMA(splitData(this.rawData),20),
                 smooth: true,
                 lineStyle: {
                     normal: {opacity: 0.5}
@@ -352,7 +382,7 @@ var klinechart = {
             {
                 name: 'MA30',
                 type: 'line',
-                data: calculateMA(30),
+                data: calculateMA(splitData(this.rawData),30),
                 smooth: true,
                 lineStyle: {
                     normal: {opacity: 0.5}
