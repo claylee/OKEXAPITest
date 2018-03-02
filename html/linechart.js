@@ -55,6 +55,7 @@ var linechart = {
       yAxis: {
           type: 'value',
           boundaryGap: [0, '100%'],
+          min:'dataMin',
           splitLine: {
               show: true
           }

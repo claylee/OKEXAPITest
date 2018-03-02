@@ -69,7 +69,7 @@
     function addItemBitHumbLine(){
       setInterval(function () {
         var chartData = klineOKCoin.data;
-        $.getJSON("data/BITHUMB/data_0000_20180224.json",function(data){
+        $.getJSON("data/BITHUMB/data_0000_20180303.json",function(data){
             //alert(data['channel']);
             jsonData = data["data"];
             console.log(jsonData);
@@ -78,8 +78,8 @@
             var curDataLength = chartData.length;
             for (var i = curDataLength; i < (5+curDataLength)
                 && i < jsonData.length; i++) {
-                  if(curDataLength>50)
-                    chartData.shift();
+                //if(curDataLength>50)
+                //  chartData.shift();
                 console.log(i);
                 chartData.push(formChartData(jsonData[i]));
             }

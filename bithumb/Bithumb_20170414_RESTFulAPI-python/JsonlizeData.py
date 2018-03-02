@@ -68,7 +68,7 @@ class JsonlizeData:
 
             #print(self.channelDict[c])
             chlCtx.addItem(message["data"]);
-            print(chlCtx)
+            #print(chlCtx)
 
             self.flowCount += 1
             print(" | ",self.flowCount,self.flowLevel)
