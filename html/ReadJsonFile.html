@@ -10,6 +10,7 @@
   <script type="text/javascript" src="MD5.js"></script>
   <script src="echarts.min.js"></script>
   <script src="klinechart.js"></script>
+  <script src="linechart.js"></script>
   <script src="jquery-2.1.1.js"></script>
 </head>
 <body>
@@ -64,15 +65,42 @@
     console.log(idx);
   }
 
+
+    function addItemBitHumbLine(){
+      setInterval(function () {
+        var chartData = klineOKCoin.data;
+        $.getJSON("data/BITHUMB/data_0000_20180224.json",function(data){
+            //alert(data['channel']);
+            jsonData = data["data"];
+            console.log(jsonData);
+            //setInterval("addItem()",1000);
+            //klineOKCoin.resetData(jsonData);
+            var curDataLength = chartData.length;
+            for (var i = curDataLength; i < (5+curDataLength)
+                && i < jsonData.length; i++) {
+                  if(curDataLength>50)
+                    chartData.shift();
+                console.log(i);
+                chartData.push(formChartData(jsonData[i]));
+            }
+
+            console.log(chartData);
+            klineOKCoin.myChart.setOption({
+                series: [{
+                    data: chartData
+                }]
+            });
+        });
+      }, 2000);
+    }
+
   $(function(){
-    klineOKCoin = klinechart.init(document.getElementById('main'));
+    klineOKCoin = linechart.init(document.getElementById('main'));
     klineBithumb = klinechart.init(document.getElementById('bithumb_main'));
-
-
-
+    addItemBitHumbLine();
     //setInterval("addItem()",5000);
-    setInterval("addItemBitHumb()",5000);
+    //setInterval("addItemBitHumb()",5000);
+    //setInterval("addItemBitHumb()",5000);
     //addItemBitHumb()
-
   });
 </script>
