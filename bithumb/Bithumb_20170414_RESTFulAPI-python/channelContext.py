@@ -57,13 +57,18 @@ class channelContext:
     def store(self):
         try:
             print('store')
-            s = "INSERT INTO bithumbTick VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+            s = "INSERT INTO bithumbTick (opening_price ,closing_price  \
+            ,min_price ,max_price ,average_price ,units_traded  \
+            ,volume_1day ,volume_7day ,buy_price ,sell_price ,date \
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
             print(s)
             with self.sqlJsonConnection(True) as conn:
                 print("ssss")
                 for jsonrow in self.jsonData["data"]:
                     print(jsonrow.values())
                     conn.execute(s, tuple(jsonrow.values()))
+                conn.commit()
+                self.jsonData["data"].clear()
 
             with open(self.filename,'w+') as jsonFile:
                 json.dump(self.jsonData,jsonFile)
