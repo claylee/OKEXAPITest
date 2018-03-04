@@ -4,6 +4,7 @@ import sys
 import time
 import json
 import channelContext
+import sqlite3
 
 class JsonlizeData:
     dataFilePath = ""
@@ -11,7 +12,7 @@ class JsonlizeData:
     data = {"channel":"","data":[]}
 
     flowCount = 0;
-    flowLevel = 50;
+    flowLevel = 2;
 
     channelDict = {}
 
@@ -21,7 +22,6 @@ class JsonlizeData:
         self.data = {"channel":"","data":[]}
         self.dataFile = self.dataFilePath + "data_" + time.strftime("%Y%m%d") + ".json"
         print(self.dataFile)
-
 
     def load(self,items):
         print("----dataFile loading...")
