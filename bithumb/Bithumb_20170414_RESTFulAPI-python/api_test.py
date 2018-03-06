@@ -59,13 +59,14 @@ print("- Sell Price: " + result["data"]["sell_price"]);
 print("- Buy Price: " + result["data"]["buy_price"]);
 print("");
 
-for i in range(999999):
+for i in range(3):
 	time.sleep(1)
 	print(">>",i)
 	result = api.xcoinApiCall("/public/ticker", rgParams);
 	print("- Buy Price: " + result["data"]["date"]);
 	print("- Buy Price: " + result["data"]["buy_price"]);
 	serialDataFile.SerialMessage(result)
+serialDataFile.storeToFile()
 
 #
 # Private API

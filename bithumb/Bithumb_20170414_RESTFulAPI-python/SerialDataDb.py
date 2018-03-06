@@ -13,7 +13,7 @@ class SerialDataDb:
     data = {"channel":"","data":[]}
 
     flowCount = 0;
-    flowLevel = 2;
+    flowLevel = 20;
 
     channelDict = {}
 
@@ -136,6 +136,26 @@ class SerialDataDb:
         print("load stored data file")
         d = self.load(data)
 
+    def storeToFile(self):
+        try:
+            print("----storeToFile store")
+            print(self.dataFile,self.data)
+            with self.sqlJsonConnection(True) as conn:
+                with open(self.dataFile,'w+') as jsonFile:
+                    #jsonFile.write(json.dumps(self.data));
+                    cursor = conn.cursor();
+                    cursor.execute("SELECT opening_price ,closing_price  \
+                    ,min_price ,max_price ,average_price ,units_traded  \
+                    ,volume_1day ,volume_7day ,buy_price ,sell_price \
+                    FROM bithumbTick")
+                    self.data["data"] = cursor.fetchall()
+                    print self.data
+                    json.dump(self.data,jsonFile)
+                    #jsonFile.write(data);
+                    jsonFile.close()
+        except Exception as Argument:
+            print('storeToFile:',Argument)
+        self.dataFile
 
     def store(self, dataContext):
         try:
