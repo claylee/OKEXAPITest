@@ -29,6 +29,7 @@ from xcoin_api_client import *
 import pprint
 import time
 import JsonlizeData
+import SerialDataDb
 
 api_key = "api_connect_key";
 api_secret = "api_secret_key";
@@ -48,7 +49,7 @@ rgParams = {
 # /public/recent_ticker
 # /public/orderbook
 # /public/recent_transactions
-serialDataFile = JsonlizeData.JsonlizeData("../../html/Data/BITHUMB/")
+serialDataFile = SerialDataDb.SerialDataDb("../../html/Data/bithumb/")
 print("Bithumb Public API URI('/public/ticker') Request...");
 result = api.xcoinApiCall("/public/ticker", rgParams);
 print("- Status Code: " + result["status"]);
