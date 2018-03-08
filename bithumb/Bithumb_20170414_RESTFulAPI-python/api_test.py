@@ -41,48 +41,65 @@ rgParams = {
 	"payment_currency" : "KRW"
 };
 
-
-#
-# Public API
-#
-# /public/ticker
-# /public/recent_ticker
-# /public/orderbook
-# /public/recent_transactions
 serialDataFile = SerialDataDb.SerialDataDb("../../html/Data/bithumb/")
-print("Bithumb Public API URI('/public/ticker') Request...");
-result = api.xcoinApiCall("/public/ticker", rgParams);
-print("- Status Code: " + result["status"]);
-print("- Opening Price: " + result["data"]["opening_price"]);
-print("- Closing Price: " + result["data"]["closing_price"]);
-print("- Sell Price: " + result["data"]["sell_price"]);
-print("- Buy Price: " + result["data"]["buy_price"]);
-print("");
 
-for i in range(3):
-	time.sleep(1)
-	print(">>",i)
+def ScrapTicket():
+	#
+	# Public API
+	#
+	# /public/ticker
+	# /public/recent_ticker
+	# /public/orderbook
+	# /public/recent_transactions
+	print("Bithumb Public API URI('/public/ticker') Request...");
 	result = api.xcoinApiCall("/public/ticker", rgParams);
-	print("- Buy Price: " + result["data"]["date"]);
+	print("- Status Code: " + result["status"]);
+	print("- Opening Price: " + result["data"]["opening_price"]);
+	print("- Closing Price: " + result["data"]["closing_price"]);
+	print("- Sell Price: " + result["data"]["sell_price"]);
 	print("- Buy Price: " + result["data"]["buy_price"]);
-	serialDataFile.SerialMessage(result)
-serialDataFile.storeToFile()
+	print("");
 
-#
-# Private API
-#
-# endpoint => parameters
-# /info/current
-# /info/account
-# /info/balance
-# /info/wallet_address
+	for i in range(30000):
+		try:
+			time.sleep(1)
+			print(">>",i)
+			result = api.xcoinApiCall("/public/ticker", rgParams);
+			print("- Buy Price: " + result["data"]["date"]);
+			print("- Buy Price: " + result["data"]["buy_price"]);
+			serialDataFile.SerialMessage(result)
+			if(i%50==0):
+				serialDataFile.storeToFile()
+		except Exception as ExArgument:
+			print('Main loop Error:', ExArgument)
+	#
+	# Private API
+	#
+	# endpoint => parameters
+	# /info/current
+	# /info/account
+	# /info/balance
+	# /info/wallet_address
 
-#print("Bithumb Private API URI('/info/account') Request...");
-#result = api.xcoinApiCall("/info/account", rgParams);
-#print("- Status Code: " + result["status"]);
-#print("- Created: " + result["data"]["created"]);
-#print("- Account ID: " + result["data"]["account_id"]);
-#print("- Trade Fee: " + result["data"]["trade_fee"]);
-#print("- Balance: " + result["data"]["balance"]);
+	#print("Bithumb Private API URI('/info/account') Request...");
+	#result = api.xcoinApiCall("/info/account", rgParams);
+	#print("- Status Code: " + result["status"]);
+	#print("- Created: " + result["data"]["created"]);
+	#print("- Account ID: " + result["data"]["account_id"]);
+	#print("- Trade Fee: " + result["data"]["trade_fee"]);
+	#print("- Balance: " + result["data"]["balance"]);
+
+def SerialCurDataToFile():
+	serialDataFile.storeToFile()
+
+commandKey = raw_input("input command number:\n\
+1:Scarp Data from BitHumb\n\
+2:Serial data to file\n")
+
+if(commandKey == "2"):
+	SerialCurDataToFile()
+else:
+	ScrapTicket()
+
 
 sys.exit(0);

@@ -65,10 +65,10 @@ class channelContext:
             with self.sqlJsonConnection(True) as conn:
                 print("ssss")
                 for jsonrow in self.jsonData["data"]:
-                    print(jsonrow.values())
+                    #print(jsonrow.values())
                     conn.execute(s, tuple(jsonrow.values()))
+                    self.jsonData["data"].remove(jsonrow)
                 conn.commit()
-                self.jsonData["data"].clear()
 
             with open(self.filename,'w+') as jsonFile:
                 json.dump(self.jsonData,jsonFile)
