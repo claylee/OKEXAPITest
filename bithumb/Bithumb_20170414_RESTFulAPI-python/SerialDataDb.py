@@ -140,6 +140,10 @@ class SerialDataDb:
     def storeToFile(self):
         try:
             print("----storeToFile store")
+<<<<<<< HEAD
+=======
+            #print(self.dataFile,self.data)
+>>>>>>> 9e76ceac44836a6cc6e6fde62082ea1a35d673e5
             with self.sqlJsonConnection(True) as conn:
                 with open(self.dataFile,'w+') as jsonFile:
                     #jsonFile.write(json.dumps(self.data));
@@ -149,6 +153,10 @@ class SerialDataDb:
                     ,volume_1day ,volume_7day ,buy_price ,sell_price \
                     FROM bithumbTick")
                     self.data["data"] = cursor.fetchall()
+<<<<<<< HEAD
+=======
+                    #print self.data
+>>>>>>> 9e76ceac44836a6cc6e6fde62082ea1a35d673e5
                     json.dump(self.data,jsonFile)
                     #jsonFile.write(data);
                     jsonFile.close()
@@ -166,6 +174,10 @@ class SerialDataDb:
             jsonData = dataContext.jsonData["data"]
             with self.sqlJsonConnection(True) as conn:
                 for jsonrow in jsonData:
+<<<<<<< HEAD
+=======
+                    #print(jsonrow.values())
+>>>>>>> 9e76ceac44836a6cc6e6fde62082ea1a35d673e5
                     conn.execute(s, tuple(jsonrow.values()))
                 conn.commit()
                 dataContext.clearItems()
