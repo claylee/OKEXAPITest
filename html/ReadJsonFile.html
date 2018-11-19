@@ -69,14 +69,14 @@
     function addItemBitHumbLine(){
       setInterval(function () {
         var chartData = klineOKCoin.data;
-        $.getJSON("data/BITHUMB/data_20180308.json",function(data){
+        $.getJSON("data/BITHUMB/data_20180309.json",function(data){
             //alert(data['channel']);
             jsonData = data["data"];
             console.log(jsonData);
             //setInterval("addItem()",1000);
             //klineOKCoin.resetData(jsonData);
             var curDataLength = chartData.length;
-            for (var i = curDataLength; i < (5+curDataLength)
+            for (var i = curDataLength; i < (50+curDataLength)
                 && i < jsonData.length; i++) {
                 //if(curDataLength>50)
                 //  chartData.shift();
@@ -91,7 +91,7 @@
                 }]
             });
         });
-      }, 2000);
+      }, 1000);
     }
 
   $(function(){

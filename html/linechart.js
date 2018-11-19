@@ -17,7 +17,7 @@ function formChartData(data) {
         name: now.toString(),
         value: [
             [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-            data[3]
+            data[8]
         ]
     }
 }

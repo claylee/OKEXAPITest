@@ -36,4 +36,5 @@ class DbItemContext:
         self.jsonData["data"].append(item)
 
     def clearItems(self):
-        self.jsonData["data"].clear()
+        del self.jsonData["data"][:]
+        #self.jsonData["data"].clear()

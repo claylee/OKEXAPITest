@@ -43,22 +43,6 @@ rgParams = {
 
 serialDataFile = SerialDataDb.SerialDataDb("../../html/Data/bithumb/")
 
-for i in range(3000):
-	try:
-		time.sleep(1)
-
-		print(">>",i)
-		result = api.xcoinApiCall("/public/ticker", rgParams);
-		print("- Buy Price: " + result["data"]["date"]);
-		print("- Buy Price: " + result["data"]["buy_price"]);
-		serialDataFile.SerialMessage(result)
-		if(i % 500 == 0):
-			print('is now going file stroe')
-			serialDataFile.storeToFile()
-	except Exception as Argument:
-		print('main loop Error:',Argument)
-
-=======
 def ScrapTicket():
 	#
 	# Public API
@@ -75,7 +59,6 @@ def ScrapTicket():
 	print("- Sell Price: " + result["data"]["sell_price"]);
 	print("- Buy Price: " + result["data"]["buy_price"]);
 	print("");
->>>>>>> 9e76ceac44836a6cc6e6fde62082ea1a35d673e5
 
 	for i in range(30000):
 		try:
@@ -109,7 +92,7 @@ def ScrapTicket():
 def SerialCurDataToFile():
 	serialDataFile.storeToFile()
 
-commandKey = raw_input("input command number:\n\
+commandKey = input("input command number:\n\
 1:Scarp Data from BitHumb\n\
 2:Serial data to file\n")
 
