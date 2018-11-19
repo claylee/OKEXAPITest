@@ -1,21 +1,22 @@
 import os
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float, Time
 from database import db
 
-class PriceNode():
+class PriceNode(db.Model):
     __tablename__ = 'PriceNode'
     priceNodeId = Column(Integer, primary_key=True)
-    price = Column(Number)
 
-    timeutc = Column(DateTime)
+    price = Column(Float)
+
+    timeutc = Column(Time)
 
     website = Column(String(120))
 
-    sellPrice = Column(Number)
+    sellPrice = Column(Float)
 
-    butPrice = Column(Number)
+    butPrice = Column(Float)
 
     def __init__(self):
         pass
@@ -23,9 +24,3 @@ class PriceNode():
 
     def __repr__(self):
         return '<title %r>' % (self.title)
-
-
-class DataSchema():
-
-    price = 0
-    CoinType = ""
