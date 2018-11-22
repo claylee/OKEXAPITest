@@ -4,7 +4,6 @@
   + 基于Flask
   + 网站数据 bithumb 和 OKEX。但是bithumb目前国内已经无法解析域名
   + Data通过网站的Python API,做了测试。控制台Python同步数据，存在sqlite里面。
-  + 
 
 
 ## 下步
