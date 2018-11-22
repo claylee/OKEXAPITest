@@ -1,6 +1,28 @@
 {% extends "performData/base.html"  %}
 {%block body%}
 <div class="row">
+  <div class="col-md-3 col-lg-3">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <span class="input-group-text" id="basic-addon2">example.com</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 col-lg-8">
+    <div id="line-chart">
+    </div>
+
+      <div class="card" style="">
+        <div class="card-body">
+          <h5 class="card-title"></h5>
+          <p class="card-text"><br/></p>
+          <a href="" class="btn btn-primary">打开影像库</a>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="row">
   {%for db in cateList%}
 
   <div class="col-sm-4">
