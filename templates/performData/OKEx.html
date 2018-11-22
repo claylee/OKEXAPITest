@@ -1,0 +1,17 @@
+{% extends "performData/base.html"  %}
+{%block body%}
+<div class="row">
+  {%for db in cateList%}
+
+  <div class="col-sm-4">
+    <div class="card" style="">
+      <div class="card-body">
+        <h5 class="card-title">{{db.name}}</h5>
+        <p class="card-text">{{db.name}}.<br/>{{db.desc}}</p>
+        <a href="/rasterviewer/setrasterset/{{db.name}}" class="btn btn-primary">打开影像库</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock%}

@@ -54,15 +54,15 @@ def teardown_request(exception):
     g.db.close()
 
 
-app.add_url_rule('/index/',view_func=views.index)
-app.add_url_rule('/',view_func=views.index)
+#app.add_url_rule('/index/',view_func=views.index)
+#app.add_url_rule('/',view_func=views.index)
 
 from PerformData import performData as performData_blueprint
 #注册blueprint到一级路由
 #app.register_blueprint(picMan_blueprint)
 
 #注册blueprint 到二级路由
-app.register_blueprint(performData_blueprint,url_prefix="/performData")
+app.register_blueprint(performData_blueprint,url_prefix="/")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True)

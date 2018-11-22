@@ -7,3 +7,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 @performData.route("/",methods=["GET","POST"])
 def index():
     return render_template("performData/index.html")
+
+@performData.route("/OKEx",methods=["GET","POST"])
+def showOKEx():
+    return render_template("performData/OKEx.html")
