@@ -11,6 +11,59 @@ TradePrice = dataSchema.TradePrice
 def buildSign():
     pass
 
+def TradeCoins(length,timespan):
+    coins = ['ltc','btc']
+    tradeUrl = "https://www.okcoin.com/api/v1/ticker.do?symbol={}_{}"
+
+    tickerCache = {}
+
+    for c in coins:
+        tickerCache[c] = []
+
+    for l in range(length):
+        time.sleep(timespan)
+        for c in coins:
+            url = tradeUrl.format(c,"usd")
+            jsonTicker = ticker(url)
+            print(jsonTicker["ticker"])
+            tickerCache[c].append(TickerModel(jsonTicker["ticker"],"okcoin",c,"USD"))
+            if(len(tickerCache[c]) > 200):
+                db.session.add_all(tickerCache[c])
+                db.session.commit()
+                tickerCache[c] = []
+
+    for c in coins:
+        db.session.add_all(tickerCache[c])
+        db.session.commit()
+
+
+def TickerModel(jsonTicker,site,SetCoin,BuyCoin):
+    tp = TradePrice()
+    tp.high = float(jsonTicker['high'])
+    tp.low = float(jsonTicker['low'])
+    tp.vol = float(jsonTicker['vol'])
+    tp.last = float(jsonTicker['last'])
+    tp.buy = float(jsonTicker['buy'])
+    tp.sell = float(jsonTicker['sell'])
+    tp.website = site
+    tp.SetCoin = SetCoin
+    tp.BuyCoin = BuyCoin
+    return tp
+
+def ticker(url):
+    con = httplib2.Http()
+    body_data = {};
+    body = parse.urlencode(body_data)
+
+    header_data = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+    resp, content = con.request(url,method="GET",body=body,headers=header_data)
+
+    return json.loads(content)
+
+
+
+
 def realTrades():
     tradeUrl = "https://www.okcoin.com/api/v1/ticker.do?symbol=ltc_usd"
     con = httplib2.Http()
@@ -23,11 +76,9 @@ def realTrades():
     for i in range(80):
         resp, content = con.request(tradeUrl,method="GET",body=body,headers=header_data)
         tp = TradePrice()
-        print(content)
         jsonContent = None
         print(content.decode())
         jsonContent = json.loads(content)
-        print(jsonContent)
         ticker = jsonContent['ticker']
         print(ticker['high'])
         tp.high = float(ticker['high'])
@@ -36,6 +87,9 @@ def realTrades():
         tp.last = float(ticker['last'])
         tp.buy = float(ticker['buy'])
         tp.sell = float(ticker['sell'])
+        tp.website = "okcoin"
+        tp.SetCoin = "LTC"
+        tp.BuyCoin = "USD"
         dbRange.append(tp)
         time.sleep(1)
 
