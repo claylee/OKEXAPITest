@@ -1,0 +1,33 @@
+{% extends "performData/base.html"  %}
+{%block body%}
+<div class="row">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">high</th>
+      <th scope="col">low</th>
+      <th scope="col">vol</th>
+      <th scope="col">last</th>
+      <th scope="col">buy</th>
+      <th scope="col">sell</th>
+      <th scope="col">date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in tickers %}
+      <tr>
+        <td>{{l.id}}</td>
+        <td>{{l.high}}</td>
+        <td>{{l.low}}</td>
+        <td>{{l.vol}}</td>
+        <td>{{l.last}}</td>
+        <td>{{l.buy}}</td>
+        <td>{{l.sell}}</td>
+        <td>{{l.id}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock%}
