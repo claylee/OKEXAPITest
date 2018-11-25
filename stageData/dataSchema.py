@@ -4,6 +4,28 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, Time
 from database import db
 
+class TradePrice(db.Model):
+    __tablename__ = 'TradePrice'
+    id = Column(Integer, primary_key=True)
+
+    high = Column(Float)
+    low = Column(Float)
+    vol = Column(Float)
+    last = Column(Float)
+    buy = Column(Float)
+    sell = Column(Float)
+    date = Column(Time)
+    website = Column(String(120))
+    SetCoin = Column(String(20))
+    BuyCoin = Column(String(20))
+
+    def __init__(self):
+        pass
+
+    def __repr__(self):
+        return '<title %r>' % (self.title)
+
+
 class PriceNode(db.Model):
     __tablename__ = 'PriceNode'
     priceNodeId = Column(Integer, primary_key=True)
