@@ -31,7 +31,7 @@ def StartApp():
         print("-------------------------")
         db.init_app(app)
     print(db.get_app())
-    TradeCoins(2000,5)
+    TradeCoins(200000,5)
 
 def TradeCoins(length,timespan):
     coins = ['ltc','btc']
