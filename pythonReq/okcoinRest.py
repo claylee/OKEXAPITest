@@ -11,6 +11,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 from config import Config
 import time
+from datetime import datetime
 
 TradePrice = dataSchema.TradePrice
 
@@ -72,7 +73,7 @@ def TickerModel(jsonData,site,SetCoin,BuyCoin):
     tickerDate = jsonData["date"]
     jsonTicker = jsonData["ticker"]
     tp = TradePrice()
-    tp.date = time.localtime(int(tickerDate))
+    tp.date = datetime.fromtimestamp(int(tickerDate))
     tp.high = float(jsonTicker['high'])
     tp.low = float(jsonTicker['low'])
     tp.vol = float(jsonTicker['vol'])
