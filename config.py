@@ -1,5 +1,6 @@
 # configuration
 
+
 class Config(object):
 	DATABASE = 'tmp/coin.db'
 	DEBUG = True

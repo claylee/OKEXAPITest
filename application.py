@@ -1,4 +1,3 @@
-
 # all the imports
 import sqlite3
 import os
@@ -21,7 +20,7 @@ appc = app
 app.config.from_object(Config)
 pprint(app.config)
 print("test app import")
-from database import db_session,db
+from database import db_session, db
 
 db.init_app(app)
 
@@ -32,6 +31,7 @@ def shutdown_session(exception=None):
     #Flask-SQLAlchemy does that for you
     #db_session.remove()
     pass
+
 
 def connect_db():
     #pprint(os.path.abspath(app.config['DATABASE']))
@@ -45,9 +45,11 @@ def init_db():
             db.cursor().executescript(f.read().decode('utf-8'))
         db.commit()
 
+
 @app.before_request
 def before_request():
     g.db = connect_db()
+
 
 @app.teardown_request
 def teardown_request(exception):
@@ -62,7 +64,7 @@ from PerformData import performData as performData_blueprint
 #app.register_blueprint(picMan_blueprint)
 
 #注册blueprint 到二级路由
-app.register_blueprint(performData_blueprint,url_prefix="/")
+app.register_blueprint(performData_blueprint, url_prefix="/")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000,debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
