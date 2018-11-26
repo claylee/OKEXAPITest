@@ -1,9 +1,15 @@
 
 import httplib2
+import os
+import sys
 import json
+import time
 from urllib import parse # import urlencode
-from database import db
+from database import db_session,db
 from stageData import dataSchema
+from flask import Flask, request, session, g, redirect, url_for, \
+     abort, render_template, flash
+from config import Config
 import time
 
 TradePrice = dataSchema.TradePrice
@@ -11,28 +17,50 @@ TradePrice = dataSchema.TradePrice
 def buildSign():
     pass
 
+def StartApp():
+    app = Flask(__name__)
+    sys.path.append("..\\..\\")
+
+    Config.SQLALCHEMY_DATABASE_URI = 'sqlite:///../tmp/coin.db'
+
+    app.config.from_object(Config)
+    print(Config)
+    app.app_context().push()
+    with app.app_context():
+        print("-------------------------")
+        db.init_app(app)
+    print(db.get_app())
+    TradeCoins(2000,5)
+
 def TradeCoins(length,timespan):
     coins = ['ltc','btc']
     tradeUrl = "https://www.okcoin.com/api/v1/ticker.do?symbol={}_{}"
 
     tickerCache = {}
+    print(db)
+    print(db.get_app())
 
     for c in coins:
         tickerCache[c] = []
 
     for l in range(length):
         time.sleep(timespan)
+        print('..')
         for c in coins:
             try:
                 url = tradeUrl.format(c,"usd")
-                jsonTicker = ticker(url)
-                print(jsonTicker["ticker"])
-                tickerCache[c].append(TickerModel(jsonTicker["ticker"],"okcoin",c,"USD"))
-                if(len(tickerCache[c]) > 200):
+                #{"date":"1543211767","ticker":{"high":"31.93","vol":"2227.00","last":"31.06","low":"26.24","buy":"31.02","sell":"31.06"}}
+                jsonData = ticker(url)
+                print(jsonData["ticker"])
+                tickerCache[c].append(TickerModel(jsonData,"okcoin",c,"USD"))
+                print(c,len(tickerCache[c]))
+                if(len(tickerCache[c]) > 50):
+                    print("-- alchemy serial")
                     db.session.add_all(tickerCache[c])
                     db.session.commit()
-                    tickerCache[c] = []
-            except ex as Exception:
+                    tickerCache[c].clear()
+                    #tickerCache[c] = []
+            except Exception as ex:
                 print(ex)
 
     for c in coins:
@@ -40,8 +68,11 @@ def TradeCoins(length,timespan):
         db.session.commit()
 
 
-def TickerModel(jsonTicker,site,SetCoin,BuyCoin):
+def TickerModel(jsonData,site,SetCoin,BuyCoin):
+    tickerDate = jsonData["date"]
+    jsonTicker = jsonData["ticker"]
     tp = TradePrice()
+    tp.date = time.localtime(int(tickerDate))
     tp.high = float(jsonTicker['high'])
     tp.low = float(jsonTicker['low'])
     tp.vol = float(jsonTicker['vol'])
