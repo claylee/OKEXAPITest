@@ -1,0 +1,159 @@
+{% extends "performData/base.html" %} {%block body%}
+<div class="row">
+    <div class="" id="data" style="height:200px;overflow: scroll;">{{jsondata}}</div>
+    <div id="linecharts" style="width: 600px;height:400px;"></div>
+</div>
+<script>
+    //var myChart = echarts.init(document.getElementById('linecharts'));
+
+    function randomData() {
+        now = new Date(+now + oneDay);
+        value = value + Math.random() * 21 - 10;
+        return {
+            name: now.toString(),
+            value: [
+                [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+                Math.round(value)
+            ]
+        }
+    }
+
+    function formChartData(data) {
+        now = new Date(+now + oneDay);
+        value = value + Math.random() * 21 - 10;
+        return {
+            name: now.toString(),
+            value: [
+                [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+                data[8]
+            ]
+        }
+    }
+
+    var now = +new Date(1997, 9, 3);
+    var oneDay = 24 * 3600 * 1000;
+    var value = Math.random() * 1000;
+    //for (var i = 0; i < 1000; i++) {
+    //    data.push(randomData());
+    //}
+
+    var linechart = {
+        data: [],
+        option: option = {
+            title: {
+                text: '堆叠区域图'
+            },
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : ['周一','周二','周三','周四','周五','周六','周日']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'邮件营销',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    name:'联盟广告',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    name:'视频广告',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data:[150, 232, 201, 154, 190, 330, 410]
+                },
+                {
+                    name:'直接访问',
+                    type:'line',
+                    stack: '总量',
+                    areaStyle: {normal: {}},
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    name:'搜索引擎',
+                    type:'line',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    areaStyle: {normal: {}},
+                    data:[820, 932, 901, 934, 1290, 1330, 1320]
+                }
+            ]
+        },
+        myChart: {},
+        init: function (domchart) {
+            this.myChart = echarts.init(domchart);
+            this.myChart.setOption(this.option);
+            return this;
+        },
+        refresh:function()
+        {
+            this.myChart.setOption(this.option);
+        }
+    };
+
+    lineOkc = linechart.init(document.getElementById('linecharts'));
+    alert($("#data").html())
+    jsondata = eval($("#data").html())
+    kdata = []
+    for(var l in jsondata)
+    {
+        kdata.push(l["buy"])
+    }
+    alert(kdata)
+    series= [{
+        name: '模拟数据',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: data
+    }]
+    linechart.option.series = []
+    linechart.option.series = series;
+    linechart.refresh()
+    
+
+
+</script> {% endblock%}

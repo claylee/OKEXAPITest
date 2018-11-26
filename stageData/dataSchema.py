@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, DateTime, Time
 from database import db
 
+
 class TradePrice(db.Model):
     __tablename__ = 'TradePrice'
     id = Column(Integer, primary_key=True)
@@ -22,9 +23,6 @@ class TradePrice(db.Model):
     def __init__(self):
         pass
 
-    def __repr__(self):
-        return '<title %r>' % (self.title)
-
 
 class PriceNode(db.Model):
     __tablename__ = 'PriceNode'
@@ -42,7 +40,6 @@ class PriceNode(db.Model):
 
     def __init__(self):
         pass
-
 
     def __repr__(self):
         return '<title %r>' % (self.title)
