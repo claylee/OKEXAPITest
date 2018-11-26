@@ -23,14 +23,17 @@ def TradeCoins(length,timespan):
     for l in range(length):
         time.sleep(timespan)
         for c in coins:
-            url = tradeUrl.format(c,"usd")
-            jsonTicker = ticker(url)
-            print(jsonTicker["ticker"])
-            tickerCache[c].append(TickerModel(jsonTicker["ticker"],"okcoin",c,"USD"))
-            if(len(tickerCache[c]) > 200):
-                db.session.add_all(tickerCache[c])
-                db.session.commit()
-                tickerCache[c] = []
+            try:
+                url = tradeUrl.format(c,"usd")
+                jsonTicker = ticker(url)
+                print(jsonTicker["ticker"])
+                tickerCache[c].append(TickerModel(jsonTicker["ticker"],"okcoin",c,"USD"))
+                if(len(tickerCache[c]) > 200):
+                    db.session.add_all(tickerCache[c])
+                    db.session.commit()
+                    tickerCache[c] = []
+            except ex as Exception:
+                print(ex)
 
     for c in coins:
         db.session.add_all(tickerCache[c])
