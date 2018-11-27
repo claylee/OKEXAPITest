@@ -2,7 +2,7 @@
 {%block body%}
 <div class="row">
     <div class="" id="data" style="height:200px;overflow: scroll;">{{jsondata}}</div>
-    <div id="linecharts" style="width: 600px;height:400px;"></div>
+    <div id="linecharts" style="height:400px;width: 900px;"></div>
 </div>
 <script>
     //var myChart = echarts.init(document.getElementById('linecharts'));
@@ -125,8 +125,10 @@
         },
         myChart: {},
         init: function (domchart) {
-            this.myChart = echarts.init(domchart);
-            this.myChart.setOption(this.option);
+            charC = echarts.init(domchart);
+            console.log(charC);
+            this.myChart = charC;
+            //this.myChart.setOption(this.option);
             return this;
         },
         refresh:function()
@@ -136,25 +138,80 @@
     };
 
     lineOkc = linechart.init(document.getElementById('linecharts'));
-    alert($("#data").html())
     jsondata = eval($("#data").html())
     kdata = []
+    btcData = []
+    xkdata = []
+    var i = 0;
     for(var l in jsondata)
     {
-        kdata.push(l["buy"])
+        if(jsondata[l]["SetCoin"] == "LTC")
+        {
+          kdata.push(jsondata[l]["buy"])
+          xkdata.push("x")
+        }
+        else if(jsondata[l]["SetCoin"] == "btc")
+        {
+          btcData.push(parseFloat(jsondata[l]["buy"])-4025)
+        }
     }
-    alert(kdata)
+    console.log(kdata)
+    console.log(btcData)
     series= [{
+        stack: '总量',
+        label: {
+            normal: {
+                show: true,
+                position: 'top'
+            }
+        },
+        areaStyle: {normal: {}},
         name: '模拟数据',
         type: 'line',
         showSymbol: false,
         hoverAnimation: false,
-        data: data
+        data: kdata
     }]
-    linechart.option.series = []
-    linechart.option.series = series;
-    linechart.refresh()
-    
+    console.log(lineOkc.myChart);
+    lineOkc.myChart.setOption({
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : xkdata
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        legend: {
+            data:['BTC','LTC']
+        },
+        series:[{
+            stack: '总量',
+            areaStyle: {normal: {}},
+            name: 'BTC',
+            type: 'line',
+            data: kdata
+        },
+        {
+            stack: '总量',
+            areaStyle: {normal: {}},
+            name: 'LTC',
+            type: 'line',
+            data: btcData
+        }]
+    });
+    console.log(lineOkc.myChart);
+
 
 
 </script> 
