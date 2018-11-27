@@ -1,8 +1,12 @@
 {% extends "performData/base.html" %} 
 {%block body%}
 <div class="row">
-    <div class="" id="data" style="height:200px;overflow: scroll;">{{jsondata}}</div>
-    <div id="linecharts" style="height:400px;width: 900px;"></div>
+    <input type="hidden" class="" id="data" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
+    <input type="hidden" id="line1" value="{{line1}}" />
+    <input type="hidden" id="line2" value="{{line2}}"/>
+    <div style="height:420px;width:1000px;overflow: scroll">
+        <div id="linecharts" style="height:400px;width:6000px;"></div>
+    </div>
 </div>
 <script>
     //var myChart = echarts.init(document.getElementById('linecharts'));
@@ -143,18 +147,7 @@
     btcData = []
     xkdata = []
     var i = 0;
-    for(var l in jsondata)
-    {
-        if(jsondata[l]["SetCoin"] == "LTC")
-        {
-          kdata.push(jsondata[l]["buy"])
-          xkdata.push("x")
-        }
-        else if(jsondata[l]["SetCoin"] == "btc")
-        {
-          btcData.push(parseFloat(jsondata[l]["buy"])-4025)
-        }
-    }
+
     console.log(kdata)
     console.log(btcData)
     series= [{
@@ -176,15 +169,24 @@
     lineOkc.myChart.setOption({
         grid: {
             left: '3%',
-            right: '4%',
+            right: '3%',
             bottom: '3%',
             containLabel: true
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
+            }
         },
         xAxis : [
             {
                 type : 'category',
                 boundaryGap : false,
-                data : xkdata
+                data : jsondata
             }
         ],
         yAxis : [
@@ -200,19 +202,17 @@
             areaStyle: {normal: {}},
             name: 'BTC',
             type: 'line',
-            data: kdata
+            data: eval($("#line1").val())
         },
         {
             stack: '总量',
             areaStyle: {normal: {}},
             name: 'LTC',
             type: 'line',
-            data: btcData
+            data: eval($("#line2").val())
         }]
     });
     console.log(lineOkc.myChart);
-
-
 
 </script> 
 {% endblock%}
