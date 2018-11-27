@@ -3,11 +3,11 @@ from . import performData
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 from pythonReq import okcoinRest
-from Util.JsonEncoderCustom import JsonCustomEncoder,AlchemyEncoder
+from Util.JsonEncoderCustom import JsonCustomEncoder, AlchemyEncoder
 import json
 TradePrice = dataSchema.TradePrice
 
-
+#TODO:
 @performData.route("/", methods=["GET", "POST"])
 def index():
     content = okcoinRest.realTrades()
