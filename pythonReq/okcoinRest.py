@@ -1,4 +1,3 @@
-
 import httplib2
 import os
 import sys
@@ -18,7 +17,8 @@ TradePrice = dataSchema.TradePrice
 def buildSign():
     pass
 
-def StartApp():
+
+def StartApp(length, timespan):
     app = Flask(__name__)
     sys.path.append("..\\..\\")
 
@@ -31,9 +31,10 @@ def StartApp():
         print("-------------------------")
         db.init_app(app)
     print(db.get_app())
-    TradeCoins(200000,5)
+    TradeCoins(length, timespan)
 
-def TradeCoins(length,timespan):
+
+def TradeCoins(length, timespan):
     coins = ['ltc','btc']
     tradeUrl = "https://www.okcoin.com/api/v1/ticker.do?symbol={}_{}"
 
