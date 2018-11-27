@@ -7,10 +7,34 @@ function getVirtulData(year,tickerData) {
     for (var time = date; time < end; time += dayTime) {
         data.push([
             echarts.format.formatTime('yyyy-MM-dd', time),
-            Math.floor(Math.random() * 10000)
+            //Math.floor(Math.random() * 10000)
         ]);
     }
     return data;
+}
+
+function checkDate(dateList){
+    dList = []
+    for(var i in dateList)
+    {
+        var d = new Date(parseInt(dateList[i])*1000);
+        var day = d.getDate();
+        console.log(day);
+        a = false;
+        for(var key in dList)
+        {
+            if(key == d)
+            {
+              a = true;
+              break;
+            }
+        }
+        if(a){continue;}
+
+        dList.push(d);
+
+    }
+    return dList
 }
 
 var calendarTicker = {
@@ -37,7 +61,7 @@ var calendarTicker = {
           left: 30,
           right: 30,
           cellSize: ['auto', 13],
-          range: '2018-01',
+          range: '2018',
           itemStyle: {
               normal: {borderWidth: 0.5}
           },
@@ -46,7 +70,7 @@ var calendarTicker = {
       series: {
           type: 'heatmap',
           coordinateSystem: 'calendar',
-          data: []
+          data: getVirtulData()
       }
   },
   myChart: {},
