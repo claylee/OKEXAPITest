@@ -29,7 +29,10 @@ function checkDate(dateList){
               break;
             }
         }
-        if(a){continue;}
+        if(a)
+        {
+            continue;
+        }
 
         dList.push(d);
 
@@ -81,4 +84,29 @@ var calendarTicker = {
         return this;
   }
 
+}
+
+var HourTicker = {
+    init:function(dom){
+        var rowOffset = 11;
+        var g = $('<g translate(0, 0)></g>')
+        var svg = $('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="88" \
+            class="js-calendar-graph-svg">');
+        var cg = $("<g transform='translate(0,0)'></g>")
+        for(var i=0; i<4;i++)
+        {
+            g = $("<g transform='translate("+ i * rowOffset + ",0)'></g>")
+            for(var j=0; j<6; j++)
+            {
+                var h = $('<rect class="day active" width="16" \
+                  height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="#c6e48b" \
+                  data-count="1" data-date="2017-12-19"></rect>');
+                $(g).append(h);
+            }
+            $(cg).append(g);
+        }
+        $(svg).append(cg);
+        $(dom).append(svg);
+        $(dom).html($(dom).html());
+    }
 }

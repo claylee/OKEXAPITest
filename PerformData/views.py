@@ -30,18 +30,16 @@ def tickers():
 @performData.route("/line", methods=["GET", "POST"])
 def line():
     tickList = TradePrice.query.all()
-    arr = fomula.ConstructTensor()
+    arr,dictHour = fomula.ConstructTensor()
     x = arr[:, 1]
     x[x==0] = 4000
     y = arr[:, 2]
     y[y==0] = 30
     a = x[0]/y[0]
     t = x - y * a
-    print(x)
-    print(y)
-    print(t)
     return render_template(
         "performData/linechart.html",
         jsondata=json.dumps(list(arr[:, 0])),
         line1=json.dumps(list(x/y-a)),
-        line2=json.dumps(list(y- x/a)))
+        line2=json.dumps(list(y- x/a)),
+        hour1 = json.dumps(dictHour))

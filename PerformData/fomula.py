@@ -5,6 +5,18 @@ import time
 
 TradePrice = dataSchema.TradePrice
 
+def reorderHour(tickerList):
+    print(tickerList)
+    print("tickerList")
+    dict = {}
+    for t in tickerList:
+        if t[0] not in dict:
+
+            dict[t[0]] = []
+        dict[t[0]].append(t[1]);
+    return dict
+
+
 
 def ConstructTensor():
     # BtcList = dataSchema.TradePrice.filter(
@@ -12,6 +24,7 @@ def ConstructTensor():
     # LtcList = dataSchema.TradePrice.filter(
     #     str.upper(TradePrice.SetCoin) == 'LTC')
     dict = {}
+    dictHour = {}
     # btcTensor = np.empty(len(BtcList),2)
     # ltcTensor = np.empty(len(LtcList), 2)
     # for b in BtcList:
@@ -25,14 +38,26 @@ def ConstructTensor():
         if l.date is None or l.SetCoin is None:
             continue
 
+        timeTp = l.date.timetuple()
+        daterStr = "{}-{}-{}".format(timeTp.tm_year,timeTp.tm_mon,timeTp.tm_mday)
+        timeStr = "{}-{}-{} {}".format(timeTp.tm_year,timeTp.tm_mon,timeTp.tm_mday,timeTp.tm_hour)
         dt = time.mktime(l.date.timetuple())
+        if daterStr not in dictHour:
+            dictHour[daterStr] = {}
+
+        if timeStr not in dictHour[daterStr]:
+            dictHour[daterStr][timeStr] = [0,0]
+
         if dt not in dict:
             dict[dt] = [0, 0]
 
         if str.upper(l.SetCoin) == "BTC":
             dict[dt][0] = l.buy
+            dictHour[daterStr][timeStr][0] = l.buy
+
         elif str.upper(l.SetCoin) == "LTC":
             dict[dt][1] = l.buy
+            dictHour[daterStr][timeStr][1] = l.buy
 
     npList = np.empty([len(dict.keys()), 3])
     pList = []
@@ -42,4 +67,4 @@ def ConstructTensor():
     npList = np.array(pList)
 
     print(npList)
-    return npList
+    return npList, dictHour

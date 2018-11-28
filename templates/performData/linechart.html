@@ -1,11 +1,27 @@
 {% extends "performData/base.html" %}
 {%block body%}
 <script src="./static/calendar-ticker.js"></script>
+<style type="text/css">
+    .js-calendar-graph-svg{
+      display:block;
+      width:330px;
+      height:240px
+    }
+
+    .js-calendar-graph-svg>g{
+      display:block;
+      overflow-wrap: break-word;
+      width:330px;
+      height:240px
+    }
+</style>
 <div class="row">
     <div id="calendarTickerContainer" style="height:400px;width:600px;"></div>
+    <div id="hourTicker" style="height:400px;width:200px;"></div>
     <input type="hidden" class="" id="timedata" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
     <input type="hidden" id="line1" value="{{line1}}" />
     <input type="hidden" id="line2" value="{{line2}}"/>
+    <input type="hidden" id="hour1" value="" />
     <div style="height:420px;width:1000px;overflow: scroll">
         <div id="linecharts" style="height:400px;width:6000px;"></div>
     </div>
@@ -14,14 +30,24 @@
     //var myChart = echarts.init(document.getElementById('linecharts'));
     $(function(){
         jsondata = eval($("#timedata").val())
+        var reg = new RegExp("&#34;","g" )
+        console.log('{{hour1}}'.replace(reg,"\'"));
+        hour1 = '{{hour1}}'.replace(reg,"\'")
         console.log(jsondata);
-        dayList = checkDate(jsondata);
+        var dayList = [];
+        for(var i in hour1)
+        {
+            var d = new Date(parseInt(i)*1000);
+            var day = d.getDate();
+            dayList.push(d);
+        }
+        //dayList = checkDate(jsondata);
         console.log(dayList);
         getVirtulData(dayList);
         console.log(dayList);
 
         calendarTicker.init(document.getElementById('calendarTickerContainer'));
-
+        HourTicker.init(document.getElementById('hourTicker'));
         function randomData() {
             now = new Date(+now + oneDay);
             value = value + Math.random() * 21 - 10;
