@@ -1,7 +1,7 @@
 from stageData import dataSchema
 from . import performData
 from flask import Flask, request, session, g, redirect, url_for, \
-     abort, render_template, flash
+     abort, render_template, flash,jsonify
 from pythonReq import okcoinRest
 from Util.JsonEncoderCustom import JsonCustomEncoder, AlchemyEncoder
 import json
@@ -65,4 +65,4 @@ def DateTicker(day,hour):
     line = TradePrice.query.filter(TradePrice.date >= dt,TradePrice.date <= dt+datetime.timedelta(days = 1)).all()
     print(line)
     arr,dictHour = fomula.ConstructTensor(line)
-    return json.dumps(dictHour)
+    return jsonify(dictHour)

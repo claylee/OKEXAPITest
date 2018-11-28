@@ -62,7 +62,7 @@ def ConstructTensor(cList):
             dict[dt][1] = l.buy
             dictHour[daterStr][timeStr][1].append(l.buy)
 
-        print(timeStr,len(dictHour[daterStr][timeStr]))
+        #print(timeStr,len(dictHour[daterStr][timeStr]))
 
     npList = np.empty([len(dict.keys()), 3])
     pList = []
