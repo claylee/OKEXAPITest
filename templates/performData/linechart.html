@@ -40,7 +40,6 @@
             dayList.push(d);
         }
         //dayList = checkDate(jsondata);
-        getVirtulData(dayList);
 
         var calendar = calendarTicker.init(document.getElementById('calendarTickerContainer'));
 
@@ -247,13 +246,19 @@
             }]
         });
 
+        var s1 = $.get('./dateticker/', function(tickerDict){
+            calendar.getStat(function(e){
+                return getVirtulData('2018',tickerDict);
+            });
+        });
+
         calendar.onclick(function(params){
             if(params.componentType == "series")
             {
                 var day = params.data[0];
+                $("#hourTicker").empty();
                 var s1 = $.get('./dateticker/'+day+'/1', function(data){
                     hour1 = data[day.toString()];
-                    $("#hourTicker").empty();
                     var hourRect = HourTicker.init(document.getElementById('hourTicker'),params.data, hour1);
                     hourRect.onclick(function(e){
                         console.log(hourRect.tickerdata);
@@ -261,12 +266,21 @@
                         var b = $(e).attr('data-hour');
                         var hkey = a + " " + b;
                         console.log(hkey);
+                        var cat = [];
+                        var line1 = [];
+                        var line2 = [];
+                        if(hourRect.tickerdata && hourRect.tickerdata[hkey])
+                        {
+                            cat = hourRect.tickerdata[hkey][0];
+                            line1 = hourRect.tickerdata[hkey][0];
+                            line2 = hourRect.tickerdata[hkey][1];
+                        }
                         lineOkc.myChart.setOption({
                             xAxis : [
                                 {
                                     type : 'category',
                                     boundaryGap : false,
-                                    data : hourRect.tickerdata[hkey][0]
+                                    data : cat
                                 }
                             ],
                             series:[{
@@ -274,14 +288,14 @@
                                 areaStyle: {normal: {}},
                                 name: 'BTC',
                                 type: 'line',
-                                data: hourRect.tickerdata[hkey][0]
+                                data: line1
                             },
                             {
                                 stack: '总量',
                                 areaStyle: {normal: {}},
                                 name: 'LTC',
                                 type: 'line',
-                                data: hourRect.tickerdata[hkey][1]
+                                data: line2
                             }]
                         });
                     });

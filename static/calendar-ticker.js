@@ -4,10 +4,20 @@ function getVirtulData(year,tickerData) {
     var end = +echarts.number.parseDate((+year + 1) + '-01-01');
     var dayTime = 3600 * 24 * 1000;
     var data = [];
+    console.log(tickerData);
     for (var time = date; time < end; time += dayTime) {
+        var dateString = echarts.format.formatTime('yyyy-MM-dd', time);
+        var value = -1;
+        if(tickerData && tickerData[dateString])
+        {
+            console.log(dateString);
+            console.log(tickerData[dateString]);
+            value = 9000;
+        }
         data.push([
             echarts.format.formatTime('yyyy-MM-dd', time),
-            Math.floor(Math.random() * 10000)
+            //Math.floor(Math.random() * 10000)
+            value
         ]);
     }
     return data;
@@ -76,6 +86,13 @@ var calendarTicker = {
           data: getVirtulData()
       }
   },
+  getStat:function(handle){
+      this.myChart.setOption({
+          series: {
+              data: handle()
+          }
+      });
+  },
   myChart: {},
   onclick:function(handle){
       this.myChart.on('click', handle);
@@ -112,8 +129,12 @@ var HourTicker = {
             g = $("<g transform='translate("+ i * rowOffset + ",0)'></g>")
             for(var j=0; j<6; j++)
             {
+                var key = data[0]+' '+(i*6+j+1);
+                var color = "#c1c1c1";
+                if(this.tickerdata && this.tickerdata[key])
+                    color = "#c6e48b";
                 var h = $('<rect class="day active" width="16" \
-                  height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="#c6e48b" \
+                  height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="'+color+'" \
                   data-count="1" data-date="'+data[0]+'" data-hour="'+(i*6+j+1)+'"></rect>');
                 var t = $('<text  x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" width="16" \
                 height="16" fill="red">'+(i*j+j+1)+'</text>');
