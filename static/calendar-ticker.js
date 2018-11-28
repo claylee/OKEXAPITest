@@ -142,7 +142,7 @@ var HourTicker = {
 
                 //h.append(t);
                 $(g).append(h);
-                $(g).append(t);
+                //$(g).append(t);
             }
             $(cg).append(g);
         }
