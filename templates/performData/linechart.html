@@ -29,11 +29,9 @@
 <script>
     //var myChart = echarts.init(document.getElementById('linecharts'));
     $(function(){
-        jsondata = eval($("#timedata").val())
-        var reg = new RegExp("&#34;","g" )
-        console.log('{{hour1}}'.replace(reg,"\'"));
-        hour1 = '{{hour1}}'.replace(reg,"\'")
-        console.log(jsondata);
+        jsondata = eval($("#timedata").val());
+        var reg = new RegExp("&#34;","g" );
+        hour1 = '{{hour1}}'.replace(reg,"\'");
         var dayList = [];
         for(var i in hour1)
         {
@@ -42,12 +40,33 @@
             dayList.push(d);
         }
         //dayList = checkDate(jsondata);
-        console.log(dayList);
         getVirtulData(dayList);
-        console.log(dayList);
 
-        calendarTicker.init(document.getElementById('calendarTickerContainer'));
-        HourTicker.init(document.getElementById('hourTicker'));
+        var calendar = calendarTicker.init(document.getElementById('calendarTickerContainer'));
+
+        calendar.onclick(function(params){
+            if(params.componentType == "series")
+            {
+                var day = params.data[0];
+                var s1 = $.get('./dateticker/'+day+'/1', function(data){
+                    hour1 = data[day.toString()];
+                    console.log("hour1");
+                    console.log(day.toString());
+                    console.log(data);
+                    console.log(hour1);
+                });
+                console.log(day.toString());
+                console.log(hour1);
+                hour1 = JSON.parse(hour1);
+                var data = hour1[day.toString()];
+                console.log(hour1);
+                console.log(day.toString());
+                console.log(data);
+                $("#hourTicker").empty();
+                HourTicker.init(document.getElementById('hourTicker'),params.data);
+            }
+        });
+
         function randomData() {
             now = new Date(+now + oneDay);
             value = value + Math.random() * 21 - 10;

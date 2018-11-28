@@ -7,7 +7,7 @@ function getVirtulData(year,tickerData) {
     for (var time = date; time < end; time += dayTime) {
         data.push([
             echarts.format.formatTime('yyyy-MM-dd', time),
-            //Math.floor(Math.random() * 10000)
+            Math.floor(Math.random() * 10000)
         ]);
     }
     return data;
@@ -77,17 +77,28 @@ var calendarTicker = {
       }
   },
   myChart: {},
+  onclick:function(handle){
+      this.myChart.on('click', handle);
+  },
   init: function(dom){
         charC = echarts.init(dom);
         this.myChart = charC;
         this.myChart.setOption(this.option);
         return this;
   }
+}
+
+function rectclick(date,hour){
 
 }
 
+
 var HourTicker = {
-    init:function(dom){
+    onclick:function(){
+
+    },
+    tickerdata:{},
+    init:function(dom,data){
         var rowOffset = 11;
         var g = $('<g translate(0, 0)></g>')
         var svg = $('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="88" \
@@ -100,7 +111,11 @@ var HourTicker = {
             {
                 var h = $('<rect class="day active" width="16" \
                   height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="#c6e48b" \
-                  data-count="1" data-date="2017-12-19"></rect>');
+                  data-count="1" data-date="'+data[0]+'" data-hour="'+(i*6+j+1)+'"></rect>');
+                var t = $('<text  x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" width="16" \
+                height="16" fill="red">'+(i*j+j+1)+'</text>');
+                h.attr("onclick","rectclick("+data[0]+","+(i*6+j+1)+")");
+                h.append(t);
                 $(g).append(h);
             }
             $(cg).append(g);
