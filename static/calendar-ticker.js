@@ -136,12 +136,13 @@ var HourTicker = {
                 var h = $('<rect class="day active" width="16" \
                   height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="'+color+'" \
                   data-count="1" data-date="'+data[0]+'" data-hour="'+(i*6+j+1)+'"></rect>');
-                var t = $('<text  x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" width="16" \
-                height="16" fill="red">'+(i*j+j+1)+'</text>');
+                var t = $('<text x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset) + 14)+'" width="16" \
+                height="16" fill="#777777">'+(i*6+j + 1)+'</text>');
                 //h.attr("onclick","rectclick("+data[0]+","+(i*6+j+1)+")");
 
-                h.append(t);
+                //h.append(t);
                 $(g).append(h);
+                $(g).append(t);
             }
             $(cg).append(g);
         }
