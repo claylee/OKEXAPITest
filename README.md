@@ -10,8 +10,9 @@
 
   1.  找到公式，excel
   2.  一个site的模拟登陆
-  3. 确定行情Data的model, SQLAlchemy保存
-  4. sqlalchemy生成Json，返回给chart
+  3. 确定行情Data的model, SQLAlchemy保存 (okxon)
+  4. sqlalchemy生成Json，返回给chart  ..Done
   4. 同步行情Data的机制。实时、获取历史阶段
-  5. 绘制Data的Chart
-  6. 绘制对比Data。或者找到对比模式
+  5. 绘制Data的Chart                 ..Done
+  6. 绘制对比Data。或者找到对比模式      
+  7. 找到三角关系，验证，公式
