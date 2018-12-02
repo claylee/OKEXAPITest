@@ -36,7 +36,7 @@ def TradeTicker(length, timespan):
         jsonData = tickerBtc()
         priceArray.append(TickerModel_Bithumb(jsonData, "BTC", "KRW"))
 
-        if len(priceArray > 50):
+        if len(priceArray) > 50:
             db.session.add_all(priceArray)
             db.session.commit()
             priceArray.clear()
@@ -58,12 +58,12 @@ def TradeTicker(length, timespan):
 def TickerModel_Bithumb(jsonData, setCoin, buyCoin):
     site = "bithumb"
     status = jsonData["status"]
-    print(status)
     jsonTicker = jsonData["data"]
     tp = TradePrice()
     tickerDate = jsonTicker["date"]
-    print(tickerDate, int(tickerDate))
-    tp.date = datetime.fromtimestamp(int(tickerDate))
+    tp.date = datetime.fromtimestamp(int(tickerDate)/1000)
+
+    print(tp.date, status, jsonTicker['buy_price'])
     tp.high = float(jsonTicker['max_price'])
     tp.low = float(jsonTicker['min_price'])
     tp.vol = float(jsonTicker['volume_1day'])
