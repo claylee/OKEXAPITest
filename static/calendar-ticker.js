@@ -74,7 +74,7 @@ var calendarTicker = {
           left: 30,
           right: 30,
           cellSize: ['auto', 13],
-          range: '2018',
+          range: '2018-11',
           itemStyle: {
               normal: {borderWidth: 0.5}
           },
