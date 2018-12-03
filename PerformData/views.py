@@ -1,7 +1,10 @@
 from stageData import dataSchema
 from . import performData
 from flask import Flask, request, session, g, redirect, url_for, \
-     abort, render_template, flash,jsonify
+     abort, render_template, flash, jsonify
+
+from sqlalchemy import func
+from database import db
 from pythonReq import okcoinRest
 from Util.JsonEncoderCustom import JsonCustomEncoder, AlchemyEncoder
 import json
@@ -48,17 +51,21 @@ def line():
         hour1 = json.dumps(dictHour))
 
 
+@performData.route("/cointp", methods=["GET", "POST"])
+def CoinType():
+    CoinTypes = db.session.query(TradePrice.website, TradePrice.SetCoin,
+                                 func.count('*')).group_by(
+                                     TradePrice.website,
+                                     TradePrice.SetCoin).all()
+    return jsonify(CoinTypes)
 
-@performData.route("/dateticker/", methods=["GET", "POST"])
-@performData.route("/dateticker/<day>/<hour>", methods=["GET", "POST"])
-def DateTicker(day = None ,hour = None):
-    print(day)
 
-    if day is None:
-        line = TradePrice.query.all()
-        arr,dictHour = fomula.ConstructTensor(line)
-        return jsonify(dictHour)
-        
+@performData.route("/priceline/", methods=["POST"])
+def PriceLine(coin = None, day = None ,hour = None):
+    coins = request.form['coins']
+    print(coins)
+
+def convetDate(day):
     dt = datetime.datetime.strptime(day, "%Y-%m-%d");
     now_time = datetime.datetime.now()
     print(dt)
@@ -68,15 +75,30 @@ def DateTicker(day = None ,hour = None):
     print(timespam)
     print(dt+datetime.timedelta(days = 1))
     timespam2 = time.mktime((dt+datetime.timedelta(days = 1)).timetuple())
-    print(timespam , timespam2)
+    print(timespam, timespam2)
 
-    print(datetime.datetime.fromtimestamp(int(timespam))
-        , datetime.datetime.fromtimestamp(int(timespam2)))
+    print(datetime.datetime.fromtimestamp(int(timespam)), 
+        datetime.datetime.fromtimestamp(int(timespam2)))
 
+    return dt
+    
 
-    line = TradePrice.query.filter(TradePrice.date >= dt,TradePrice.date <= dt+datetime.timedelta(days = 1)).all()
+@performData.route("/dateticker/", methods=["GET", "POST"])
+@performData.route("/dateticker/<day>/<hour>", methods=["GET", "POST"])
+def DateTicker(day = None ,hour = None):
+    print(day)
+
+    if day is None:
+        line = TradePrice.query.all()
+        arr, dictHour = fomula.ConstructTensor(line)
+        return jsonify(dictHour)
+    dt = convetDate(day)
+
+    line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt 
+        + datetime.timedelta(days=1)).all()
+
     print(line)
-    arr,dictHour = fomula.ConstructTensor(line)
+    arr, dictHour = fomula.ConstructTensor(line)
     x = arr[:, 1]
     x[x==0] = 4000
     y = arr[:, 2]

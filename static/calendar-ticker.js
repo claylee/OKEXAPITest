@@ -8,6 +8,7 @@ function getVirtulData(year,tickerData) {
     for (var time = date; time < end; time += dayTime) {
         var dateString = echarts.format.formatTime('yyyy-MM-dd', time);
         var value = -1;
+        console.log(dateString);
         if(tickerData && tickerData[dateString])
         {
             console.log(dateString);
@@ -55,7 +56,7 @@ var calendarTicker = {
       title: {
           top: 30,
           left: 'center',
-          text: '2016年某人每天的步数'
+          text: 'ticker state'
       },
       tooltip : {},
       visualMap: {

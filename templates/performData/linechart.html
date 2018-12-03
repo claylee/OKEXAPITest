@@ -16,8 +16,12 @@
     }
 </style>
 <div class="row">
-    <div id="calendarTickerContainer" style="height:400px;width:600px;"></div>
-    <div id="hourTicker" style="height:400px;width:200px;"></div>
+    <div id="cointype">
+        <div class="btn-group">           
+        </div>
+    </div>
+    <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
+    <div id="hourTicker" style="height:260px;width:200px;"></div>
     <input type="hidden" class="" id="timedata" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
     <input type="hidden" id="line1" value="{{line1}}" />
     <input type="hidden" id="line2" value="{{line2}}"/>
@@ -28,7 +32,61 @@
 </div>
 <script>
     //var myChart = echarts.init(document.getElementById('linecharts'));
+
     $(function(){
+        
+        var CoinsPrice = function(){
+            var coins = $('input:checked').attr("coin");
+            console.log(coins);
+            console.log($('input:checked').attr("coin"));
+            console.log($('input:checked').attr("id"));
+            console.log($('input:checked').attr("type"));
+
+
+            var data = {
+
+            }          
+            $.post("./priceline", 
+                {
+                    coins : [
+                        ['',''],
+                        ['','']
+                    ],
+                    day : '',
+                    hour : ''
+                },
+                function (data) {
+                    for (var tp in data) {
+                        tp = data[tp]
+                        $("#cointype .btn-group").append($('<div class="form-check"><input id="coin1_' + tp[0] + '_' + tp[1] +
+                            '" class="form-check-input" type="checkbox" coin="' +
+                            tp[1] + '" site="' + tp[0] + '"></input><label class="form-check-label" for="coin1_' + tp[0] + '_' + tp[1] + '" >'
+                            + tp[0] + '_' + tp[1] + ':' + tp[2] + '</div>'));
+                    }
+            });
+        };
+        
+        
+
+        var CoinType = function(){
+            $.get("./cointp", function (data) {
+
+                for(var tp in data)
+                {
+                    tp = data[tp]
+                    $("#cointype .btn-group").append($('<div class="form-check"><input id="coin1_'+ tp[0] + '_' + tp[1] + 
+                        '" class="form-check-input" type="checkbox" coin="'+
+                        tp[1]+'" site="'+tp[0]+'"></input><label class="form-check-label" for="coin1_' + tp[0] + '_' + tp[1]+ '" >'
+                        +tp[0]+'_'+tp[1]+':'+tp[2]+'</div>'));
+                }
+                $("input[type='checkbox']").change(function (e) {
+                    CoinsPrice();
+                });
+            });
+        }
+
+        CoinType();
+
         jsondata = eval($("#timedata").val());
         var reg = new RegExp("&#34;","g" );
         hour1 = '{{hour1}}'.replace(reg,"\'");
@@ -42,7 +100,6 @@
         //dayList = checkDate(jsondata);
 
         var calendar = calendarTicker.init(document.getElementById('calendarTickerContainer'));
-
 
         function randomData() {
             now = new Date(+now + oneDay);
