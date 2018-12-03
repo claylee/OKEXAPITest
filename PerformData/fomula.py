@@ -11,9 +11,8 @@ def reorderHour(tickerList):
     dict = {}
     for t in tickerList:
         if t[0] not in dict:
-
             dict[t[0]] = []
-        dict[t[0]].append(t[1]);
+        dict[t[0]].append(t[1])
     return dict
 
 def DateTicks(dictHour):
@@ -42,9 +41,11 @@ def ConstructTensor(cList):
             continue
 
         timeTp = l.date.timetuple()
-        daterStr = "{}-{}-{}".format(timeTp.tm_year,timeTp.tm_mon,timeTp.tm_mday)
+        #"{}-{}-{}".format(timeTp.tm_year,timeTp.tm_mon,timeTp.tm_mday)
+        daterStr = l.date.strftime('%Y-%m-%d')
         timeStr = "{}-{}-{} {}".format(timeTp.tm_year,timeTp.tm_mon,timeTp.tm_mday,timeTp.tm_hour)
         dt = time.mktime(l.date.timetuple())
+
         if daterStr not in dictHour:
             dictHour[daterStr] = {}
 
@@ -71,5 +72,4 @@ def ConstructTensor(cList):
 
     npList = np.array(pList)
 
-    print(len(npList))
     return npList, dictHour
