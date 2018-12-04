@@ -63,23 +63,29 @@ def CoinType():
 @performData.route("/priceline", methods=["POST"])
 def PriceLine():
     formData = request.get_json()
-    print(formData)
     coins = formData["cointype"]
     if coins is None or len(coins) == 0:
         return None
 
     lines = []
+    dt = convertDate(formData['day'])
+
+
     for l in coins:
         line = TradePrice.query.filter(TradePrice.website == l[0],
-                                       TradePrice.SetCoin == l[1])
+                                       TradePrice.SetCoin == l[1],
+                                       TradePrice.date >= dt,
+                                       TradePrice.date <= dt
+                                       + datetime.timedelta(days=1))
         arr = fomula.ConstructTickerList(line)
-        print(arr)
         lines.append(arr)
+
+    
 
     return json.dumps(lines)
 
 
-def convetDate(day):
+def convertDate(day):
     dt = datetime.datetime.strptime(day, "%Y-%m-%d")
     now_time = datetime.datetime.now()
     print(dt)
@@ -92,7 +98,7 @@ def convetDate(day):
     print(timespam, timespam2)
 
     print(datetime.datetime.fromtimestamp(int(timespam)),
-        datetime.datetime.fromtimestamp(int(timespam2)))
+          datetime.datetime.fromtimestamp(int(timespam2)))
 
     return dt
 
@@ -106,7 +112,7 @@ def DateTicker(day = None ,hour = None):
         line = TradePrice.query.all()
         arr, dictHour = fomula.ConstructTensor(line)
         return jsonify(dictHour)
-    dt = convetDate(day)
+    dt = convertDate(day)
 
     line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt
         + datetime.timedelta(days=1)).all()
