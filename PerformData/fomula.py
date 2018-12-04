@@ -19,6 +19,17 @@ def DateTicks(dictHour):
     for l in dictHour:
         print(l)
 
+def ConstructTickerList(lineModelList):
+    linelist = []
+    for l in lineModelList:
+        if l.date is None or l.SetCoin is None:
+            continue
+        linelist.append(l.buy)
+    return linelist
+
+
+
+
 
 def ConstructTensor(cList):
     # BtcList = dataSchema.TradePrice.filter(

@@ -15,13 +15,15 @@
       height:240px
     }
 </style>
-<div class="row">
-    <div id="cointype">
+<div class="container">    
+    <div id="cointype" class="row">
         <div class="btn-group">           
         </div>
     </div>
-    <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
-    <div id="hourTicker" style="height:260px;width:200px;"></div>
+    <div class="row">
+        <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
+        <div id="hourTicker" style="height:260px;width:200px;"></div>
+    </div>
     <input type="hidden" class="" id="timedata" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
     <input type="hidden" id="line1" value="{{line1}}" />
     <input type="hidden" id="line2" value="{{line2}}"/>
@@ -36,33 +38,48 @@
     $(function(){
         
         var CoinsPrice = function(){
-            var coins = $('input:checked').attr("coin");
-            console.log(coins);
-            console.log($('input:checked').attr("coin"));
-            console.log($('input:checked').attr("id"));
-            console.log($('input:checked').attr("type"));
+            var coinsData = [];
+            $('input:checked').each(function(i,n){
+                c = $(n).attr("coin");
+                s = $(n).attr("site");
+                //coins = coins.concat(c, ",");
 
+                coinsData.push([s,c]);
+            });
+            console.log(coinsData);
 
-            var data = {
+            var postData = {
+                cointype: coinsData,
+                day: '',
+                hour: ''
+            }
+            console.log(postData);
+            $.ajax({
+                type: 'post',
+                url: "./priceline", 
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(postData)
+            })
+            .done(function (data) {
+                if(!data)
+                    return;
 
-            }          
-            $.post("./priceline", 
+                serialData = []
+                for(var i in data)
                 {
-                    coins : [
-                        ['',''],
-                        ['','']
-                    ],
-                    day : '',
-                    hour : ''
-                },
-                function (data) {
-                    for (var tp in data) {
-                        tp = data[tp]
-                        $("#cointype .btn-group").append($('<div class="form-check"><input id="coin1_' + tp[0] + '_' + tp[1] +
-                            '" class="form-check-input" type="checkbox" coin="' +
-                            tp[1] + '" site="' + tp[0] + '"></input><label class="form-check-label" for="coin1_' + tp[0] + '_' + tp[1] + '" >'
-                            + tp[0] + '_' + tp[1] + ':' + tp[2] + '</div>'));
-                    }
+                    d = data[i];
+                    serialData.push({
+                        name: 'data',
+                            type: 'line',
+                                stack: '总量',
+                                    areaStyle: { },
+                        data: d
+                    });
+                }
+                console.log(serialData);
+                lineOkc.myChart.setOption({                    
+                    series: serialData
+                });                
             });
         };
         
