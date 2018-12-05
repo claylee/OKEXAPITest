@@ -351,7 +351,25 @@
                 console.log(day);
                 $("#currentday").val(day);
                 $("#hourTicker").empty();
-                var s1 = $.get('./dateticker/'+day+'/1', function(data){
+                
+                var coinsData = [];
+                $('input:checked').each(function (i, n) {
+                    c = $(n).attr("coin");
+                    s = $(n).attr("site");
+                    //coins = coins.concat(c, ",");
+
+                    coinsData.push([s, c]);
+                });
+                
+                var s1 = $.ajax({
+                    url:'./dateticker/'+day+'/1',                
+                    type: 'post',
+                    contentType: "application/json; charset=UTF-8",
+                    data: JSON.stringify({
+                        cointype: coinsData
+                    })
+                })                
+                .done(function(data){
                     hour1 = data[day.toString()];
                     var hourRect = HourTicker.init(document.getElementById('hourTicker'),params.data, hour1);
                     hourRect.onclick(function(e){

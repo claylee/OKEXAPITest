@@ -111,10 +111,15 @@ def convertDate(day):
     return dt
 
 
+
 @performData.route("/dateticker/", methods=["GET", "POST"])
 @performData.route("/dateticker/<day>/<hour>", methods=["GET", "POST"])
 def DateTicker(day = None ,hour = None):
-    print(day)
+
+    formData = request.get_json()
+    coins = {}
+    if formData is not None:
+        coins = formData["cointype"]
 
     if day is None:
         line = TradePrice.query.all()
@@ -143,6 +148,6 @@ def DateTicker(day = None ,hour = None):
                 a = 1
             else:
                 a = arrNp1[0]/arrNp2[0]
-            data[0] = list(arrNp1/arrNp2 - a)
-            data[1] = list(arrNp2 - arrNp1/a)
+                data[0] = list(arrNp1/arrNp2 - a)
+                data[1] = list(arrNp2 - arrNp1/a)
     return jsonify(dictHour)
