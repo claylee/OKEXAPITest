@@ -11,6 +11,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from config import Config
 import time
 from datetime import datetime
+from . import RestJson
 
 TradePrice = dataSchema.TradePrice
 
@@ -50,12 +51,12 @@ def TradeCoins(length, timespan):
         print('..')
         for c in coins:
             try:
-                url = tradeUrl.format(c,"usd")
+                url = tradeUrl.format(c, "usd")
                 #{"date":"1543211767","ticker":{"high":"31.93","vol":"2227.00","last":"31.06","low":"26.24","buy":"31.02","sell":"31.06"}}
-                jsonData = ticker(url)
+                jsonData = traceticker(url)
                 print(jsonData["ticker"])
-                tickerCache[c].append(TickerModel(jsonData,"okcoin",c,"USD"))
-                print(c,len(tickerCache[c]))
+                tickerCache[c].append(TickerModel(jsonData, "okcoin", c, "USD"))
+                print(c, len(tickerCache[c]))
                 if(len(tickerCache[c]) > 50):
                     print("-- alchemy serial")
                     db.session.add_all(tickerCache[c])
@@ -70,7 +71,7 @@ def TradeCoins(length, timespan):
         db.session.commit()
 
 
-def TickerModel(jsonData,site,SetCoin,BuyCoin):
+def TickerModel(jsonData, site, SetCoin, BuyCoin):
     tickerDate = jsonData["date"]
     jsonTicker = jsonData["ticker"]
     tp = TradePrice()
@@ -86,9 +87,10 @@ def TickerModel(jsonData,site,SetCoin,BuyCoin):
     tp.BuyCoin = BuyCoin
     return tp
 
-def ticker(url):
+
+def traceticker(url):
     con = httplib2.Http()
-    body_data = {};
+    body_data = {}
     body = parse.urlencode(body_data)
 
     header_data = {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -98,6 +100,10 @@ def ticker(url):
     return json.loads(content)
 
 
+def ticker(coinName):
+    tradeUrl = "https://www.okcoin.com/api/v1/ticker.do?symbol={}_{}"
+    url = tradeUrl.format(coinName, "usd")
+    return RestJson.ticker(url)
 
 
 def realTrades():

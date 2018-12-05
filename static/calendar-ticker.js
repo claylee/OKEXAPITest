@@ -4,15 +4,11 @@ function getVirtulData(year,tickerData) {
     var end = +echarts.number.parseDate((+year + 1) + '-01-01');
     var dayTime = 3600 * 24 * 1000;
     var data = [];
-    console.log(tickerData);
     for (var time = date; time < end; time += dayTime) {
         var dateString = echarts.format.formatTime('yyyy-MM-dd', time);
         var value = -1;
-        console.log(dateString);
         if(tickerData && tickerData[dateString])
         {
-            console.log(dateString);
-            console.log(tickerData[dateString]);
             value = 9000;
         }
         data.push([
@@ -52,58 +48,61 @@ function checkDate(dateList){
 }
 
 var calendarTicker = {
-  option : {
-      title: {
-          top: 30,
-          left: 'center',
-          text: 'ticker state'
-      },
-      tooltip : {},
-      visualMap: {
-          min: 0,
-          max: 10000,
-          type: 'piecewise',
-          orient: 'horizontal',
-          left: 'center',
-          top: 65,
-          textStyle: {
-              color: '#000'
-          }
-      },
-      calendar: {
-          top: 120,
-          left: 30,
-          right: 30,
-          cellSize: ['auto', 13],
-          range: '2018',
-          itemStyle: {
-              normal: {borderWidth: 0.5}
-          },
-          yearLabel: {show: false}
-      },
-      series: {
-          type: 'heatmap',
-          coordinateSystem: 'calendar',
-          data: getVirtulData()
-      }
-  },
-  getStat:function(handle){
-      this.myChart.setOption({
-          series: {
-              data: handle()
-          }
-      });
-  },
-  myChart: {},
-  onclick:function(handle){
-      this.myChart.on('click', handle);
-  },
-  init: function(dom){
+    option : {
+        title: {
+            top: 30,
+            left: 'center',
+            text: 'ticker state'
+        },
+        tooltip : {},
+        visualMap: {
+            min: 0,
+            max: 10000,
+            type: 'piecewise',
+            orient: 'horizontal',
+            left: 'center',
+            top: 65,
+            textStyle: {
+                color: '#000'
+            }
+        },
+        calendar: {
+            top: 120,
+            left: 30,
+            right: 30,
+            cellSize: ['auto', 13],
+            range: '2018',
+            itemStyle: {
+                normal: {borderWidth: 0.5}
+            },
+            yearLabel: {show: false}
+        },
+        series: {
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+            data: getVirtulData()
+        }
+    },
+    getStat:function(handle){
+        this.myChart.setOption({
+            series: {
+                data: handle()
+            }
+        });
+    },
+    myChart: {},
+    currentDay:'',
+    onclick: function(handle){
+        this.currentDay = this.myChart.on('click', handle);
+        console.log(this);
+        console.log(this, this.currentDay);
+    },
+    init: function(dom){
         charC = echarts.init(dom);
         this.myChart = charC;
         this.myChart.setOption(this.option);
         return this;
-  }
+    }
 }
 
 function rectclick(date,hour){

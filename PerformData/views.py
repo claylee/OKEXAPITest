@@ -43,6 +43,7 @@ def line():
     y[y==0] = 30
     a = x[0]/y[0]
     t = x - y * a
+    print()
     return render_template(
         "performData/linechart.html",
         jsondata=json.dumps(list(arr[:, 0])),
@@ -60,13 +61,40 @@ def CoinType():
     return jsonify(CoinTypes)
 
 
-@performData.route("/priceline/", methods=["POST"])
-def PriceLine(coin = None, day = None ,hour = None):
-    coins = request.form['coins']
-    print(coins)
+@performData.route("/priceline", methods=["POST"])
+def PriceLine():
+    formData = request.get_json()
+    coins = formData["cointype"]
+    day = formData['day']
 
-def convetDate(day):
-    dt = datetime.datetime.strptime(day, "%Y-%m-%d");
+    if coins is None or len(coins) == 0:
+        return None
+    if day is None:
+        return None
+
+    lines = []
+
+    print(day)
+    dt = convertDate(day)
+    print(coins[0], dt)
+
+    lastDateArr = []
+    for l in coins:
+        line = TradePrice.query.filter(TradePrice.website == l[0],
+                                       TradePrice.SetCoin == l[1],
+                                       TradePrice.date >= dt,
+                                       TradePrice.date <= dt
+                                       + datetime.timedelta(days=1))
+        arr, dateArr = fomula.ConstructTickerList(line)
+        lines.append(arr)
+        lastDateArr = dateArr
+    lines.append(lastDateArr)
+    print(lines)
+    return json.dumps(lines, cls=JsonCustomEncoder)
+
+
+def convertDate(day):
+    dt = datetime.datetime.strptime(day, "%Y-%m-%d")
     now_time = datetime.datetime.now()
     print(dt)
     print(now_time)
@@ -77,27 +105,31 @@ def convetDate(day):
     timespam2 = time.mktime((dt+datetime.timedelta(days = 1)).timetuple())
     print(timespam, timespam2)
 
-    print(datetime.datetime.fromtimestamp(int(timespam)), 
-        datetime.datetime.fromtimestamp(int(timespam2)))
+    print(datetime.datetime.fromtimestamp(int(timespam)),
+          datetime.datetime.fromtimestamp(int(timespam2)))
 
     return dt
-    
+
+
 
 @performData.route("/dateticker/", methods=["GET", "POST"])
 @performData.route("/dateticker/<day>/<hour>", methods=["GET", "POST"])
 def DateTicker(day = None ,hour = None):
-    print(day)
+
+    formData = request.get_json()
+    coins = {}
+    if formData is not None:
+        coins = formData["cointype"]
 
     if day is None:
         line = TradePrice.query.all()
         arr, dictHour = fomula.ConstructTensor(line)
         return jsonify(dictHour)
-    dt = convetDate(day)
+    dt = convertDate(day)
 
-    line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt 
+    line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt
         + datetime.timedelta(days=1)).all()
 
-    print(line)
     arr, dictHour = fomula.ConstructTensor(line)
     x = arr[:, 1]
     x[x==0] = 4000
@@ -110,7 +142,12 @@ def DateTicker(day = None ,hour = None):
             data = dictHour[i][j]
             arrNp1 = np.array(data[0])
             arrNp2 = np.array(data[1])
-            a = arrNp1[0]/arrNp2[0]
-            data[0] = list(arrNp1/arrNp2 - a)
-            data[1] = list(arrNp2 - arrNp1/a)
+
+            a = 1
+            if len(arrNp2) == 0:
+                a = 1
+            else:
+                a = arrNp1[0]/arrNp2[0]
+                data[0] = list(arrNp1/arrNp2 - a)
+                data[1] = list(arrNp2 - arrNp1/a)
     return jsonify(dictHour)
