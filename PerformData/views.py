@@ -43,6 +43,7 @@ def line():
     y[y==0] = 30
     a = x[0]/y[0]
     t = x - y * a
+    print()
     return render_template(
         "performData/linechart.html",
         jsondata=json.dumps(list(arr[:, 0])),
@@ -64,25 +65,32 @@ def CoinType():
 def PriceLine():
     formData = request.get_json()
     coins = formData["cointype"]
+    day = formData['day']
+
     if coins is None or len(coins) == 0:
+        return None
+    if day is None:
         return None
 
     lines = []
-    dt = convertDate(formData['day'])
 
+    print(day)
+    dt = convertDate(day)
+    print(coins[0], dt)
 
+    lastDateArr = []
     for l in coins:
         line = TradePrice.query.filter(TradePrice.website == l[0],
                                        TradePrice.SetCoin == l[1],
                                        TradePrice.date >= dt,
                                        TradePrice.date <= dt
                                        + datetime.timedelta(days=1))
-        arr = fomula.ConstructTickerList(line)
+        arr, dateArr = fomula.ConstructTickerList(line)
         lines.append(arr)
-
-    
-
-    return json.dumps(lines)
+        lastDateArr = dateArr
+    lines.append(lastDateArr)
+    print(lines)
+    return json.dumps(lines, cls=JsonCustomEncoder)
 
 
 def convertDate(day):
@@ -117,7 +125,6 @@ def DateTicker(day = None ,hour = None):
     line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt
         + datetime.timedelta(days=1)).all()
 
-    print(line)
     arr, dictHour = fomula.ConstructTensor(line)
     x = arr[:, 1]
     x[x==0] = 4000
@@ -130,7 +137,12 @@ def DateTicker(day = None ,hour = None):
             data = dictHour[i][j]
             arrNp1 = np.array(data[0])
             arrNp2 = np.array(data[1])
-            a = arrNp1[0]/arrNp2[0]
+
+            a = 1
+            if len(arrNp2) == 0:
+                a = 1
+            else:
+                a = arrNp1[0]/arrNp2[0]
             data[0] = list(arrNp1/arrNp2 - a)
             data[1] = list(arrNp2 - arrNp1/a)
     return jsonify(dictHour)

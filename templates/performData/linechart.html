@@ -17,8 +17,11 @@
 </style>
 <div class="container">    
     <div id="cointype" class="row">
-        <div class="btn-group">           
+        <div class="btn-group">
         </div>
+    </div>
+    <div class="row">
+        <span id="currentday"></span>
     </div>
     <div class="row">
         <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
@@ -46,14 +49,14 @@
 
                 coinsData.push([s,c]);
             });
-            console.log(coinsData);
-
+            console.log("#currentday");
+            console.log($("#currentday").val());
+            
             var postData = {
                 cointype: coinsData,
-                day: '',
+                day: $("#currentday").val(),
                 hour: ''
             }
-            console.log(postData);
             $.ajax({
                 type: 'post',
                 url: "./priceline", 
@@ -65,9 +68,13 @@
                     return;
 
                 serialData = []
+                console.log(data);
                 for(var i in data)
                 {
+                    if(i == data.length -1)
+                        break;
                     d = data[i];
+                    console.log(i,d);
                     serialData.push({
                         name: 'data',
                             type: 'line',
@@ -76,9 +83,19 @@
                         data: d
                     });
                 }
+                console.log("serialData");
                 console.log(serialData);
-                lineOkc.myChart.setOption({                    
-                    series: serialData
+                xData = data[data.length-1];
+                console.log(xData);
+                lineOkc.myChart.setOption({                     
+                    series: serialData,                    
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: xData
+                        }
+                    ],
                 });                
             });
         };
@@ -330,6 +347,9 @@
             if(params.componentType == "series")
             {
                 var day = params.data[0];
+                console.log("--------");
+                console.log(day);
+                $("#currentday").val(day);
                 $("#hourTicker").empty();
                 var s1 = $.get('./dateticker/'+day+'/1', function(data){
                     hour1 = data[day.toString()];
@@ -374,7 +394,10 @@
                         });
                     });
                 });
+
+                return day;
             }
+            return 
         });
 
     });

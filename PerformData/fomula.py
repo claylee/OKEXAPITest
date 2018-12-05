@@ -6,7 +6,6 @@ import time
 TradePrice = dataSchema.TradePrice
 
 def reorderHour(tickerList):
-    print(tickerList)
     print("tickerList")
     dict = {}
     for t in tickerList:
@@ -19,13 +18,16 @@ def DateTicks(dictHour):
     for l in dictHour:
         print(l)
 
+
 def ConstructTickerList(lineModelList):
+    datelist = []
     linelist = []
     for l in lineModelList:
         if l.date is None or l.SetCoin is None:
             continue
         linelist.append(l.buy)
-    return linelist
+        datelist.append(l.date)
+    return linelist, datelist
 
 
 
