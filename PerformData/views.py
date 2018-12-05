@@ -43,9 +43,9 @@ def line():
     y[y==0] = 30
     a = x[0]/y[0]
     t = x - y * a
-    print()
+    print("")
     return render_template(
-        "performData/linechart.html",
+        "performData/line.html",
         jsondata=json.dumps(list(arr[:, 0])),
         line1=json.dumps(list(x/y-a)),
         line2=json.dumps(list(y- x/a)),
@@ -59,6 +59,29 @@ def CoinType():
                                      TradePrice.website,
                                      TradePrice.SetCoin).all()
     return jsonify(CoinTypes)
+
+@performData.route("/hourstate", methods=["GET", "POST"])
+def HoursState():
+    formData = request.get_json()
+    coins = formData["cointype"]
+    day = formData['day']
+    dt = convertDate(day)
+
+    lines = []
+    hoursSet = set()
+    print(coins)
+    for l in coins:
+        line = TradePrice.query.filter(TradePrice.website == l[0],
+                                       TradePrice.SetCoin == l[1],
+                                       TradePrice.date >= dt,
+                                       TradePrice.date <= dt
+                                       + datetime.timedelta(days=1))
+        for t in line:
+            hour = t.date.timetuple().tm_hour
+            hoursSet.add(hour)
+    print(hoursSet)
+    return json.dumps(list(hoursSet))
+
 
 
 @performData.route("/priceline", methods=["POST"])
@@ -109,6 +132,11 @@ def convertDate(day):
           datetime.datetime.fromtimestamp(int(timespam2)))
 
     return dt
+
+def dateHour(day):
+    times = datetime.fromtimestamp(day)
+    return times.timetuple().hour
+
 
 
 

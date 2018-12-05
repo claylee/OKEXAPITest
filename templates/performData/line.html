@@ -1,0 +1,280 @@
+{% extends "performData/base.html" %}
+{%block body%}
+<script src="./static/calendar-ticker.js"></script>
+<script src="./static/linechart.js"></script>
+<style type="text/css">
+    .js-calendar-graph-svg{
+      display:block;
+      width:330px;
+      height:240px
+    }
+
+    .js-calendar-graph-svg>g{
+      display:block;
+      overflow-wrap: break-word;
+      width:330px;
+      height:240px
+    }
+</style>
+<div class="container">
+    <div id="cointype" class="row">
+        <div class="btn-group">
+        </div>
+    </div>
+    <div class="row">
+        <span id="currentday"></span>
+        <span id="currenthour"></span>
+    </div>
+    <div class="row">
+        <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
+        <div id="hourTicker" style="height:260px;width:200px;"></div>
+    </div>
+    <input type="hidden" class="" id="timedata" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
+    <input type="hidden" id="line1" value="{{line1}}" />
+    <input type="hidden" id="line2" value="{{line2}}"/>
+    <input type="hidden" id="hour1" value="" />
+    <div style="height:420px;width:1000px;overflow: scroll">
+        <div id="linecharts" style="height:400px;width:6000px;"></div>
+    </div>
+</div>
+<script>
+    //var myChart = echarts.init(document.getElementById('linecharts'));
+
+    var CoinsPrice = function(){
+        $.ajax({
+            type: 'post',
+            url: "./priceline",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify(lineFilterParam())
+        })
+        .done(function (data) {
+            if(!data)
+                return;
+
+            serialData = []
+            console.log(data);
+            for(var i in data)
+            {
+                if(i == data.length -1)
+                    break;
+                d = data[i];
+                serialData.push({
+                    name: 'data',
+                        type: 'line',
+                            stack: '总量',
+                                areaStyle: { },
+                    data: d
+                });
+            }
+            console.log("serialData");
+            console.log(serialData);
+            xData = data[data.length-1];
+            console.log(xData);
+            lineOkc.myChart.setOption({
+                series: serialData,
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: xData
+                    }
+                ],
+            });
+        });
+    };
+
+    var lineFilterParam = function()
+    {
+        var coinsData = [];
+        $('input:checked').each(function(i,n){
+            c = $(n).attr("coin");
+            s = $(n).attr("site");
+            coinsData.push([s,c]);
+        });
+
+        return {
+            cointype: coinsData,
+            day: $("#currentday").val(),
+            hour: $("#currenthour").val()
+        }
+    }
+
+    var CoinType = function(){
+        $.get("./cointp", function (data) {
+            for(var tp in data)
+            {
+                tp = data[tp]
+                $("#cointype .btn-group").append($('<div class="form-check"><input id="coin1_'+ tp[0] + '_' + tp[1] +
+                    '" class="form-check-input" type="checkbox" coin="'+
+                    tp[1]+'" site="'+tp[0]+'"></input><label class="form-check-label" for="coin1_' + tp[0] + '_' + tp[1]+ '" >'
+                    +tp[0]+'_'+tp[1]+':'+tp[2]+'</div>'));
+            }
+            $("input[type='checkbox']").change(function (e) {
+                CoinsPrice();
+            });
+        });
+    };
+
+    function randomData() {
+        now = new Date(+now + oneDay);
+        value = value + Math.random() * 21 - 10;
+        return {
+            name: now.toString(),
+            value: [
+                [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+                Math.round(value)
+            ]
+        }
+    }
+
+    function formChartData(data) {
+        now = new Date(+now + oneDay);
+        value = value + Math.random() * 21 - 10;
+        return {
+            name: now.toString(),
+            value: [
+                [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+                data[8]
+            ]
+        }
+    }
+
+    $(function(){
+        CoinType();
+
+        jsondata = eval($("#timedata").val());
+        var reg = new RegExp("&#34;","g" );
+        hour1 = '{{hour1}}'.replace(reg,"\'");
+        var dayList = [];
+        for(var i in hour1)
+        {
+            var d = new Date(parseInt(i)*1000);
+            var day = d.getDate();
+            dayList.push(d);
+        }
+        //dayList = checkDate(jsondata);
+
+        var calendar = calendarTicker.init(document.getElementById('calendarTickerContainer'));
+
+
+        var now = +new Date(1997, 9, 3);
+        var oneDay = 24 * 3600 * 1000;
+        var value = Math.random() * 1000;
+        //for (var i = 0; i < 1000; i++) {
+        //    data.push(randomData());
+        //}
+
+        var lineOkc = linechart.init(document.getElementById('linecharts'));
+
+        var drawLine = function()
+        {
+            var paramdata = lineFilterParam();
+
+        }
+
+        var dayTickerState = function(chart, line)
+        {
+            var paramdata = lineFilterParam();
+        }
+
+        var hourTickerState = function(day, hour1)
+        {
+            $.ajax({
+                url:'./hourstate',
+                type:'post',
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(lineFilterParam())
+            }).done(function(data){
+                console.log("hourTickerState");
+                console.log(data);
+                var hourRect = HourTicker.init(document.getElementById('hourTicker'), day, eval(data));
+
+                hourRect.onclick(function(e){
+                    console.log(hourRect.tickerdata);
+                    var a = $(e).attr('data-date');
+                    var b = $(e).attr('data-hour');
+                    var hkey = a + " " + b;
+                    console.log(hkey);
+                    var cat   = [];
+                    var line1 = [];
+                    var line2 = [];
+                    if(hourRect.tickerdata && hourRect.tickerdata[hkey])
+                    {
+                        cat = hourRect.tickerdata[hkey][0];
+                        line1 = hourRect.tickerdata[hkey][0];
+                        line2 = hourRect.tickerdata[hkey][1];
+                    }
+                    lineOkc.myChart.setOption({
+                        xAxis : [
+                            {
+                                type : 'category',
+                                boundaryGap : false,
+                                data : cat
+                            }
+                        ],
+                        series:[{
+                            stack: '总量',
+                            areaStyle: {normal: {}},
+                            name: 'BTC',
+                            type: 'line',
+                            data: line1
+                        },
+                        {
+                            stack: '总量',
+                            areaStyle: {normal: {}},
+                            name: 'LTC',
+                            type: 'line',
+                            data: line2
+                        }]
+                    });
+                });
+            });
+
+        }
+
+        kdata = []
+        btcData = []
+        xkdata = []
+        var i = 0;
+
+        console.log(kdata)
+        console.log(btcData)
+
+        var s1 = $.get('./dateticker/', function(tickerDict){
+            calendar.getStat(function(e){
+                return getVirtulData('2018',tickerDict);
+            });
+        });
+
+
+        calendar.onclick(function(params){
+            if(params.componentType == "series")
+            {
+                var day = params.data[0];
+
+                hourTickerState(day.toString(), hour1);
+
+                console.log("--------");
+                console.log(day);
+                $("#currentday").val(day);
+                $("#hourTicker").empty();
+
+                var s1 = $.ajax({
+                    url:'./dateticker/'+day+'/1',
+                    type: 'post',
+                    contentType: "application/json; charset=UTF-8",
+                    data: JSON.stringify(lineFilterParam())
+                })
+                .done(function(data){
+                    hour1 = data[day.toString()];
+                    console.log();
+                });
+
+                return day;
+            }
+            return
+        });
+
+    });
+</script>
+{% endblock%}

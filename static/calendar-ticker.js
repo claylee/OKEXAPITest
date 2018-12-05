@@ -124,24 +124,33 @@ var HourTicker = {
         var svg = $('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="88" \
             class="js-calendar-graph-svg">');
         var cg = $("<g transform='translate(0,0)'></g>")
-        for(var i=0; i<4;i++)
+        for(var i=0; i<4; i++)
         {
             g = $("<g transform='translate("+ i * rowOffset + ",0)'></g>")
+            var curhour = (i*6+j+1);
             for(var j=0; j<6; j++)
             {
                 var key = data[0]+' '+(i*6+j+1);
                 var color = "#c1c1c1";
-                if(this.tickerdata && this.tickerdata[key])
-                    color = "#c6e48b";
+                for(var h in this.tickerdata)
+                {
+                    console.log(h,j,key);
+                    if(this.tickerdata[h] == curhour || h == key)
+                    {
+                        color = "#c6e48b";
+                        break;
+                    }
+                }
                 var h = $('<rect class="day active" width="16" \
                   height="16" x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset))+'" fill="'+color+'" \
-                  data-count="1" data-date="'+data[0]+'" data-hour="'+(i*6+j+1)+'"></rect>');
+                  data-count="1" data-date="'+data[0]+'" data-hour="'+curhour+'"></rect>');
                 var t = $('<text x="'+(16+i*rowOffset)+'" y="'+(20+j*(16+rowOffset) + 14)+'" width="16" \
-                height="16" fill="#777777">'+(i*6+j + 1)+'</text>');
+                height="16" fill="#777777">'+curhour+'</text>');
                 //h.attr("onclick","rectclick("+data[0]+","+(i*6+j+1)+")");
 
                 //h.append(t);
                 $(g).append(h);
+                console.log(g)
                 //$(g).append(t);
             }
             $(cg).append(g);
