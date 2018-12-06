@@ -19,17 +19,20 @@ def DateTicks(dictHour):
         print(l)
 
 
-def ConstructTickerList(lineModelList):
+def ConstructTickerList(lineModelList, rate = 1):
     datelist = []
     linelist = []
     for l in lineModelList:
         if l.date is None or l.SetCoin is None:
             continue
-        linelist.append(l.buy)
+        linelist.append(l.buy / rate)
         datelist.append(l.date)
     return linelist, datelist
 
 
+def KRW2CNY(arr):
+    curHL = 163.0871
+    return arr / curHL
 
 
 

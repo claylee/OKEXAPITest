@@ -96,6 +96,8 @@ def HourLine():
     if day is None:
         return None
 
+    erate = 1
+
     lines = []
 
     print(day, hour)
@@ -104,12 +106,21 @@ def HourLine():
 
     lastDateArr = []
     for l in coins:
+        print("line")
         line = TradePrice.query.filter(
             TradePrice.website == l[0], TradePrice.SetCoin == l[1],
             TradePrice.date >= dt + datetime.timedelta(hours=hour),
             TradePrice.date < dt + datetime.timedelta(hours=hour+1)).all()
-        arr, dateArr = fomula.ConstructTickerList(line)
+        print(line)
+        if str.upper(l[0]) == "BITHUMB":
+            erate = 1118.45
+            arr, dateArr = fomula.ConstructTickerList(line, erate)
+        else:
+            arr, dateArr = fomula.ConstructTickerList(line)
+
+
         lines.append(arr)
+        print(arr)
         lastDateArr = dateArr
     lines.append(lastDateArr)
     return json.dumps(lines, cls=JsonCustomEncoder)

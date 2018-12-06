@@ -17,25 +17,36 @@
     }
 </style>
 <div class="container">
-    <div id="cointype" class="row">
-        <div class="btn-group">
-        </div>
-    </div>
     <div class="row">
         <span id="currentday"></span>
         <span id="currenthour"></span>
     </div>
     <div class="row">
-        <div id="calendarTickerContainer" style="height:260px;width:600px;"></div>
-        <div id="hourTicker" style="height:260px;width:200px;"></div>
+        <div class="col-3">
+            <div id="cointype" class="row">
+                <div class="btn-group">
+                </div>
+            </div>
+            <div id="calendarTickerContainer" style="height:260px;"></div>
+            <div id="hourTicker" style="height:260px;"></div>
+        </div>
+        <div class="col-9">            
+            <div style="height:620px;overflow: scroll">
+                <div id="linecharts" style="height:600px;width:2000px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <button id="refline">ref line</button>
+    <div class="row" style="height:800px">      
+        <textarea id="lineoption" style="margin:10px;width:96%">
+            
+        </textarea>
     </div>
     <input type="hidden" class="" id="timedata" style="height:200px;overflow: scroll;" value="{{jsondata}}" />
     <input type="hidden" id="line1" value="{{line1}}" />
     <input type="hidden" id="line2" value="{{line2}}"/>
     <input type="hidden" id="hour1" value="" />
-    <div style="height:420px;width:1000px;overflow: scroll">
-        <div id="linecharts" style="height:400px;width:6000px;"></div>
-    </div>
 </div>
 <script>
     //var myChart = echarts.init(document.getElementById('linecharts'));
@@ -60,9 +71,9 @@
                 d = data[i];
                 serialData.push({
                     name: 'data',
-                        type: 'line',
-                            stack: '总量',
-                                areaStyle: { },
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: { },
                     data: d
                 });
             }
@@ -104,7 +115,7 @@
             for(var tp in data)
             {
                 tp = data[tp]
-                $("#cointype .btn-group").append($('<div class="form-check"><input id="coin1_'+ tp[0] + '_' + tp[1] +
+                $("#cointype").append($('<div class="form-check"><input id="coin1_'+ tp[0] + '_' + tp[1] +
                     '" class="form-check-input" type="checkbox" coin="'+
                     tp[1]+'" site="'+tp[0]+'"></input><label class="form-check-label" for="coin1_' + tp[0] + '_' + tp[1]+ '" >'
                     +tp[0]+'_'+tp[1]+':'+tp[2]+'</div>'));
@@ -176,7 +187,7 @@
                 dataType:"json",
                 data: JSON.stringify(lineFilterParam())
             }).done(function(e){
-                
+
                 var serialData = [];
                 var xdata = []
                 for(var i in e)
@@ -184,18 +195,34 @@
                     if(i == e.length -1 )
                         break;
                     serialData.push({
-                        stack: '总量',
+                        //stack: '总量',
                         areaStyle: { normal: {} },
-                        name: 'BTC',
+                        name: 'BTC'+i,
                         type: 'line',
                         data: e[i]
                     });
                 }
                 console.log(serialData);
-                console.log(lineOkc);
-                console.log(lineOkc.myChart);
+                console.log("serialData");
+                console.log(e);
+                console.log(e[e.length-1]);
 
-                lineOkc.myChart.setOption({
+                var lineOpt = {
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
                     xAxis: [
                         {
                             type: 'category',
@@ -205,11 +232,15 @@
                     ],
                     yAxis: [
                         {
-                            type: 'value'
+                            type: 'value',
+                            min:3500
                         }
                     ],
                     series: serialData
-                });
+                };
+
+                $("#lineoption").val(JSON.stringify(lineOpt));
+                lineOkc.myChart.setOption(lineOpt);
             });
         }
 
@@ -233,7 +264,7 @@
                 hourRect.onclick(function(e){
                     console.log(hourRect.tickerdata);
                     $("#currenthour").val($(e).attr('data-hour'));
-                    drawLine();                    
+                    drawLine();
                 });
             });
 
@@ -251,6 +282,10 @@
             calendar.getStat(function(e){
                 return getVirtulData('2018',tickerDict);
             });
+        });
+
+        $("#refline").click(function(e){
+            lineOkc.myChart.setOption(JSON.parse($("#lineoption").val()));
         });
 
 

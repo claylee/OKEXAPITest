@@ -36,6 +36,7 @@ def TradeTicker(length, timespan):
 
     for i in range(length):
         time.sleep(timespan)
+        print(i,":")
         for ctp in coinType:
             jsonData = ctp[0].ticker(ctp[1])
             print(jsonData)
