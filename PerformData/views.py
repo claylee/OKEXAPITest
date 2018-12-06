@@ -65,6 +65,7 @@ def HoursState():
     formData = request.get_json()
     coins = formData["cointype"]
     day = formData['day']
+    print(formData)
     dt = convertDate(day)
 
     lines = []
@@ -74,14 +75,44 @@ def HoursState():
         line = TradePrice.query.filter(TradePrice.website == l[0],
                                        TradePrice.SetCoin == l[1],
                                        TradePrice.date >= dt,
-                                       TradePrice.date <= dt
-                                       + datetime.timedelta(days=1))
+                                       TradePrice.date < dt
+                                       + datetime.timedelta(days=1)).all()
         for t in line:
             hour = t.date.timetuple().tm_hour
             hoursSet.add(hour)
     print(hoursSet)
     return json.dumps(list(hoursSet))
 
+
+@performData.route("/hourline", methods=["POST"])
+def HourLine():
+    formData = request.get_json()
+    coins = formData["cointype"]
+    day = formData['day']
+    hour = formData['hour']
+
+    if coins is None or len(coins) == 0:
+        return None
+    if day is None:
+        return None
+
+    lines = []
+
+    print(day, hour)
+    dt = convertDate(day)
+    hour = int(hour)
+
+    lastDateArr = []
+    for l in coins:
+        line = TradePrice.query.filter(
+            TradePrice.website == l[0], TradePrice.SetCoin == l[1],
+            TradePrice.date >= dt + datetime.timedelta(hours=hour),
+            TradePrice.date < dt + datetime.timedelta(hours=hour+1)).all()
+        arr, dateArr = fomula.ConstructTickerList(line)
+        lines.append(arr)
+        lastDateArr = dateArr
+    lines.append(lastDateArr)
+    return json.dumps(lines, cls=JsonCustomEncoder)
 
 
 @performData.route("/priceline", methods=["POST"])
@@ -106,7 +137,7 @@ def PriceLine():
         line = TradePrice.query.filter(TradePrice.website == l[0],
                                        TradePrice.SetCoin == l[1],
                                        TradePrice.date >= dt,
-                                       TradePrice.date <= dt
+                                       TradePrice.date < dt
                                        + datetime.timedelta(days=1))
         arr, dateArr = fomula.ConstructTickerList(line)
         lines.append(arr)
@@ -119,14 +150,14 @@ def PriceLine():
 def convertDate(day):
     dt = datetime.datetime.strptime(day, "%Y-%m-%d")
     now_time = datetime.datetime.now()
-    print(dt)
-    print(now_time)
-    print(now_time + datetime.timedelta(days=-1))
+    #print(dt)
+    #print(now_time)
+    #print(now_time + datetime.timedelta(days=-1))
     timespam = time.mktime(dt.timetuple())
-    print(timespam)
-    print(dt+datetime.timedelta(days = 1))
+    #print(timespam)
+    #print(dt+datetime.timedelta(days = 1))
     timespam2 = time.mktime((dt+datetime.timedelta(days = 1)).timetuple())
-    print(timespam, timespam2)
+    #print(timespam, timespam2)
 
     print(datetime.datetime.fromtimestamp(int(timespam)),
           datetime.datetime.fromtimestamp(int(timespam2)))
@@ -155,7 +186,7 @@ def DateTicker(day = None ,hour = None):
         return jsonify(dictHour)
     dt = convertDate(day)
 
-    line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date <= dt
+    line = TradePrice.query.filter(TradePrice.date >= dt, TradePrice.date < dt
         + datetime.timedelta(days=1)).all()
 
     arr, dictHour = fomula.ConstructTensor(line)

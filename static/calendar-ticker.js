@@ -120,6 +120,7 @@ var HourTicker = {
     init:function(dom,data,tdata){
         var rowOffset = 11;
         this.tickerdata = tdata;
+        console.log(tdata);
         var g = $('<g translate(0, 0)></g>')
         var svg = $('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="88" \
             class="js-calendar-graph-svg">');
@@ -127,15 +128,16 @@ var HourTicker = {
         for(var i=0; i<4; i++)
         {
             g = $("<g transform='translate("+ i * rowOffset + ",0)'></g>")
-            var curhour = (i*6+j+1);
             for(var j=0; j<6; j++)
             {
+                var curhour = (i * 6 + j + 1);
                 var key = data[0]+' '+(i*6+j+1);
                 var color = "#c1c1c1";
                 for(var h in this.tickerdata)
                 {
-                    console.log(h,j,key);
-                    if(this.tickerdata[h] == curhour || h == key)
+                    statehour = this.tickerdata[h]
+                    //console.log(h, j, key, curhour, statehour);
+                    if (this.tickerdata[key] || statehour == curhour)
                     {
                         color = "#c6e48b";
                         break;
@@ -150,7 +152,6 @@ var HourTicker = {
 
                 //h.append(t);
                 $(g).append(h);
-                console.log(g)
                 //$(g).append(t);
             }
             $(cg).append(g);

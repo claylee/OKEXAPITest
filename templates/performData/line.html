@@ -169,7 +169,48 @@
         var drawLine = function()
         {
             var paramdata = lineFilterParam();
+            $.ajax({
+                url: './hourline',
+                type: 'post',
+                contentType: "application/json; charset=UTF-8",
+                dataType:"json",
+                data: JSON.stringify(lineFilterParam())
+            }).done(function(e){
+                
+                var serialData = [];
+                var xdata = []
+                for(var i in e)
+                {
+                    if(i == e.length -1 )
+                        break;
+                    serialData.push({
+                        stack: '总量',
+                        areaStyle: { normal: {} },
+                        name: 'BTC',
+                        type: 'line',
+                        data: e[i]
+                    });
+                }
+                console.log(serialData);
+                console.log(lineOkc);
+                console.log(lineOkc.myChart);
 
+                lineOkc.myChart.setOption({
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: e[e.length - 1]
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: serialData
+                });
+            });
         }
 
         var dayTickerState = function(chart, line)
@@ -191,42 +232,8 @@
 
                 hourRect.onclick(function(e){
                     console.log(hourRect.tickerdata);
-                    var a = $(e).attr('data-date');
-                    var b = $(e).attr('data-hour');
-                    var hkey = a + " " + b;
-                    console.log(hkey);
-                    var cat   = [];
-                    var line1 = [];
-                    var line2 = [];
-                    if(hourRect.tickerdata && hourRect.tickerdata[hkey])
-                    {
-                        cat = hourRect.tickerdata[hkey][0];
-                        line1 = hourRect.tickerdata[hkey][0];
-                        line2 = hourRect.tickerdata[hkey][1];
-                    }
-                    lineOkc.myChart.setOption({
-                        xAxis : [
-                            {
-                                type : 'category',
-                                boundaryGap : false,
-                                data : cat
-                            }
-                        ],
-                        series:[{
-                            stack: '总量',
-                            areaStyle: {normal: {}},
-                            name: 'BTC',
-                            type: 'line',
-                            data: line1
-                        },
-                        {
-                            stack: '总量',
-                            areaStyle: {normal: {}},
-                            name: 'LTC',
-                            type: 'line',
-                            data: line2
-                        }]
-                    });
+                    $("#currenthour").val($(e).attr('data-hour'));
+                    drawLine();                    
                 });
             });
 
@@ -251,13 +258,12 @@
             if(params.componentType == "series")
             {
                 var day = params.data[0];
-
-                hourTickerState(day.toString(), hour1);
-
-                console.log("--------");
-                console.log(day);
                 $("#currentday").val(day);
                 $("#hourTicker").empty();
+
+                hourTickerState(day.toString(), hour1);
+                return;
+
 
                 var s1 = $.ajax({
                     url:'./dateticker/'+day+'/1',
